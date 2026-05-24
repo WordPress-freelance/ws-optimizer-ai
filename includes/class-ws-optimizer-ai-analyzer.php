@@ -171,29 +171,53 @@ class WS_Optimizer_AI_Analyzer {
      */
     private function log_response( $response ) {
         $type    = gettype( $response );
-        $methods = [];
-        $props   = [];
         $raw     = '';
+        $private = [];
+        $props   = [];
 
         if ( is_object( $response ) ) {
             $methods = get_class_methods( $response );
-            $props   = array_keys( (array) $response );
-            $class   = get_class( $response );
-            $raw     = $class;
+            $raw     = get_class( $response );
+
+            // Read private/protected properties via Reflection to see inner state
+            try {
+                $ref = new \ReflectionClass( $response );
+                foreach ( $ref->getProperties() as $prop ) {
+                    $prop->setAccessible( true );
+                    $val = $prop->getValue( $response );
+                    $props[ $prop->getName() ] = gettype( $val );
+                    if ( is_scalar( $val ) || is_null( $val ) ) {
+                        $private[ $prop->getName() ] = $val;
+                    } elseif ( is_array( $val ) ) {
+                        $private[ $prop->getName() ] = $val;
+                    } elseif ( is_object( $val ) ) {
+                        $private[ $prop->getName() ] = [
+                            '__class'   => get_class( $val ),
+                            '__methods' => get_class_methods( $val ),
+                            '__cast'    => (array) $val,
+                        ];
+                    }
+                }
+            } catch ( \Exception $e ) {
+                $private['_reflection_error'] = $e->getMessage();
+            }
         } elseif ( is_array( $response ) ) {
-            $raw = wp_json_encode( $response );
+            $methods = [];
+            $raw     = wp_json_encode( $response );
         } else {
-            $raw = (string) $response;
+            $methods = [];
+            $raw     = (string) $response;
         }
 
         $text = $this->extract_text( $response );
 
         $this->log_entry( 'response', [
-            'type'    => $type,
-            'class'   => is_object( $response ) ? get_class( $response ) : null,
-            'methods' => $methods,
-            'props'   => $props,
-            'raw'     => substr( $raw, 0, 500 ),
+            'type'           => $type,
+            'class'          => is_object( $response ) ? get_class( $response ) : null,
+            'methods'        => $methods ?? [],
+            'props_types'    => $props,
+            'private_values' => $private,
+            'raw'            => substr( $raw, 0, 500 ),
             'extracted_text' => substr( $text, 0, 200 ),
         ] );
     }
