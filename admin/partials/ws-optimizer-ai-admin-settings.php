@@ -15,7 +15,7 @@ $base_url    = admin_url( 'options-general.php?page=ws-optimizer-ai' );
         <a href="<?php echo esc_url( $base_url ); ?>" class="wsoa-tab <?php echo $current_tab === 'settings' ? 'wsoa-tab--active' : ''; ?>">
             <?php esc_html_e( 'Réglages', 'ws-optimizer-ai' ); ?>
         </a>
-        <a href="<?php echo esc_url( admin_url( 'options-general.php?page=ws-optimizer-ai-logs' ) ); ?>" class="wsoa-tab">
+        <a href="<?php echo esc_url( admin_url( 'options-general.php?page=ws-optimizer-ai&tab=logs' ) ); ?>" class="wsoa-tab">
             <?php esc_html_e( 'AI Logs', 'ws-optimizer-ai' ); ?>
         </a>
     </nav>

@@ -23,7 +23,7 @@ class WS_Optimizer_AI_Admin {
         }
 
         $is_post_screen = in_array( $screen->base, [ 'post', 'edit' ], true );
-        $is_settings    = in_array( $screen->id, [ 'settings_page_ws-optimizer-ai', 'admin_page_ws-optimizer-ai-logs' ], true );
+        $is_settings    = ( $screen->id === 'settings_page_ws-optimizer-ai' );
 
         if ( $is_post_screen || $is_settings ) {
             wp_enqueue_style(
@@ -77,8 +77,7 @@ class WS_Optimizer_AI_Admin {
 
     public function add_admin_body_class( $classes ) {
         $screen = get_current_screen();
-        $wsoa_screens = [ 'settings_page_ws-optimizer-ai', 'admin_page_ws-optimizer-ai-logs' ];
-        if ( $screen && in_array( $screen->id, $wsoa_screens, true ) ) {
+        if ( $screen && $screen->id === 'settings_page_ws-optimizer-ai' ) {
             $classes .= ' wsoa-settings-page';
         }
         return $classes;
@@ -86,8 +85,7 @@ class WS_Optimizer_AI_Admin {
 
     public function inline_reset_css() {
         $screen = get_current_screen();
-        $wsoa_screens = [ 'settings_page_ws-optimizer-ai', 'admin_page_ws-optimizer-ai-logs' ];
-        if ( ! $screen || ! in_array( $screen->id, $wsoa_screens, true ) ) {
+        if ( ! $screen || $screen->id !== 'settings_page_ws-optimizer-ai' ) {
             return;
         }
         echo '<style>
@@ -170,7 +168,7 @@ class WS_Optimizer_AI_Admin {
     // -------------------------------------------------------------------------
 
     public function add_settings_page() {
-        // Main settings page under Settings
+        // Single page — tabs handled via ?tab= parameter in render_settings_page()
         add_submenu_page(
             'options-general.php',
             __( 'WS SEO Title AI', 'ws-optimizer-ai' ),
@@ -179,23 +177,15 @@ class WS_Optimizer_AI_Admin {
             'ws-optimizer-ai',
             [ $this, 'render_settings_page' ]
         );
-        // AI Logs tab as a second submenu page (hidden from nav — accessed via tab)
-        add_submenu_page(
-            null,
-            __( 'WS SEO Title AI — AI Logs', 'ws-optimizer-ai' ),
-            __( 'AI Logs', 'ws-optimizer-ai' ),
-            'manage_options',
-            'ws-optimizer-ai-logs',
-            [ $this, 'render_logs_page' ]
-        );
     }
 
     public function render_settings_page() {
-        require WS_OPTIMIZER_AI_PATH . 'admin/partials/ws-optimizer-ai-admin-settings.php';
-    }
-
-    public function render_logs_page() {
-        require WS_OPTIMIZER_AI_PATH . 'admin/partials/ws-optimizer-ai-admin-logs.php';
+        $tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'settings';
+        if ( 'logs' === $tab ) {
+            require WS_OPTIMIZER_AI_PATH . 'admin/partials/ws-optimizer-ai-admin-logs.php';
+        } else {
+            require WS_OPTIMIZER_AI_PATH . 'admin/partials/ws-optimizer-ai-admin-settings.php';
+        }
     }
 
     public function register_settings() {

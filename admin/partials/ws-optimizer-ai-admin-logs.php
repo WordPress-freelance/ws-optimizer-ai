@@ -8,9 +8,19 @@ if ( ! current_user_can( 'manage_options' ) ) {
 $log          = get_option( 'wsoa_debug_log', [] );
 $log          = array_reverse( $log );
 $capture_logs = get_option( 'wsoa_capture_logs', false );
+$base_url     = admin_url( 'options-general.php?page=ws-optimizer-ai' );
 ?>
 <div class="wrap wsoa-wrap">
     <h1><?php esc_html_e( 'WS SEO Title AI — AI Logs', 'ws-optimizer-ai' ); ?></h1>
+    <nav class="wsoa-tabs">
+        <a href="<?php echo esc_url( $base_url ); ?>" class="wsoa-tab">
+            <?php esc_html_e( 'Réglages', 'ws-optimizer-ai' ); ?>
+        </a>
+        <a href="<?php echo esc_url( $base_url . '&tab=logs' ); ?>" class="wsoa-tab wsoa-tab--active">
+            <?php esc_html_e( 'AI Logs', 'ws-optimizer-ai' ); ?>
+        </a>
+    </nav>
+
     <p class="wsoa-subtitle"><?php esc_html_e( 'Capture des échanges avec WordPress AI Client pour diagnostic.', 'ws-optimizer-ai' ); ?></p>
 
     <div class="wsoa-logs-toolbar">
