@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       WS SEO Title AI
  * Plugin URI:        https://wordpress-freelance.com/plugins/ws-optimizer-ai/
- * Description:       Analysez vos titres SEO avec l'intelligence artificielle Claude directement dans l'éditeur WordPress.
+ * Description:       Analyze your SEO titles with Claude AI directly in the post editor. Requires WordPress 7.0+ with AI Client enabled.
  * Version:           1.0.0
  * Author:            WebStrategy
  * Author URI:        https://wordpress-freelance.com
@@ -25,7 +25,7 @@ define( 'WS_OPTIMIZER_AI_URL',     plugin_dir_url( __FILE__ ) );
 require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai-activator.php';
 require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai-deactivator.php';
 
-register_activation_hook( __FILE__, [ 'WS_Optimizer_AI_Activator', 'activate' ] );
+register_activation_hook( __FILE__,   [ 'WS_Optimizer_AI_Activator',   'activate' ] );
 register_deactivation_hook( __FILE__, [ 'WS_Optimizer_AI_Deactivator', 'deactivate' ] );
 
 function ws_optimizer_ai_run() {

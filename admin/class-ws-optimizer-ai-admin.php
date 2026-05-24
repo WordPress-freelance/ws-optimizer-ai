@@ -72,7 +72,7 @@ class WS_Optimizer_AI_Admin {
     }
 
     // -------------------------------------------------------------------------
-    // Fix cadre blanc
+    // White frame fix (Avada & third-party themes)
     // -------------------------------------------------------------------------
 
     public function add_admin_body_class( $classes ) {

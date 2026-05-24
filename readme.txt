@@ -1,6 +1,6 @@
 === WS SEO Title AI ===
 Contributors: webstrategy
-Tags: seo, ai, title, claude, artificial intelligence
+Tags: seo, ai, title, claude, artificial-intelligence
 Requires at least: 6.7
 Tested up to: 6.7
 Requires PHP: 7.4
@@ -8,60 +8,54 @@ Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Analysez vos titres SEO avec Claude directement dans l'éditeur WordPress et obtenez un score, des forces, des problèmes et des recommandations.
+Analyze your SEO titles with Claude AI directly in the WordPress post editor. Score, verdict, strengths, issues and recommendations in one click.
 
 == Description ==
 
-WS SEO Title AI intègre l'intelligence artificielle Claude dans votre workflow de rédaction WordPress. Sans quitter l'éditeur, obtenez en un clic une analyse complète de votre titre : score sur 100, verdict synthétique, points forts, problèmes détectés et recommandations d'amélioration.
+**WS SEO Title AI** adds a metabox to your post editor (Gutenberg and Classic Editor) that analyses your SEO titles using Claude AI via the WordPress AI Client (WordPress 7.0+).
 
-**Fonctionnalités**
+**Features:**
 
-* Metabox native dans l'éditeur d'articles et de pages
-* Score SEO de 0 à 100 avec code couleur
-* Détection des mots-puissance, chiffres, parenthèses
-* Vérification de la longueur optimale (50-60 caractères)
-* Compatibilité Yoast SEO et Rank Math (lecture de la keyword focus)
-* Résultat mis en cache pour ne pas reconsommer l'API
-* Compatible Gutenberg et Classic Editor
-* Interface sombre palette WebStrategy
+* Score out of 100, verdict, strengths, issues and actionable recommendations
+* Supports Yoast SEO and Rank Math focus keywords
+* Results cached in post meta — no API call on page load
+* Configurable Claude model (Opus 4.6 / Sonnet 4.6)
+* Compatible with all public post types
 
-**Prérequis**
+**Requirements:**
 
-Ce plugin utilise WordPress AI Client (`wp_ai_client_prompt`) pour communiquer avec Claude (Anthropic). WordPress AI Client doit être installé, activé et configuré avec votre clé API Anthropic.
+* WordPress 7.0+ with the AI Client module enabled
+* Anthropic API key configured under Settings → AI Client
 
 == Installation ==
 
-1. Téléverser le plugin via Extensions → Téléverser une extension.
-2. Activer via Extensions → Extensions installées.
-3. Configurer les types de publication concernés dans Réglages → WS SEO Title AI.
-4. S'assurer que WordPress AI Client est configuré avec une clé API Anthropic valide.
-5. Ouvrir n'importe quel article ou page — la metabox "Analyse Titre SEO (IA)" apparaît dans la colonne latérale.
+1. Upload the plugin ZIP via WP Admin → Plugins → Add New → Upload Plugin.
+2. Activate the plugin.
+3. Go to Settings → AI Client and enter your Anthropic API key.
+4. Open any post or page — the "SEO Title Analysis (AI)" metabox appears in the sidebar.
+5. Optionally configure post types and model under Settings → WS SEO Title AI.
 
 == Frequently Asked Questions ==
 
-= Quel modèle Claude est utilisé ? =
+= Does this plugin work without WordPress 7.0? =
+No. The plugin relies on `wp_ai_client_prompt()`, introduced in WordPress 7.0. It will display a notice if the function is unavailable.
 
-Par défaut Claude Opus 4.6. Vous pouvez passer à Claude Sonnet 4.6 dans Réglages → WS SEO Title AI.
+= Which Claude models are supported? =
+Claude Opus 4.6 (default) and Claude Sonnet 4.6. Both can be selected under Settings → WS SEO Title AI.
 
-= L'analyse est-elle refaite à chaque ouverture de l'article ? =
+= Is the analysis run on every page load? =
+No. The last analysis result is cached in post meta. A new API call is only made when you click the "Analyze" or "Re-analyze" button.
 
-Non. Le résultat est mis en cache en tant que méta du post. Cliquez sur "Ré-analyser" pour déclencher une nouvelle analyse.
-
-= Le plugin est-il compatible avec Yoast SEO et Rank Math ? =
-
-Oui. Si une de ces extensions est active, le plugin récupère automatiquement la keyword focus et l'inclut dans le prompt envoyé à Claude.
-
-= Pourquoi le bouton ne fonctionne-t-il pas ? =
-
-Vérifiez que WordPress AI Client est installé et qu'une clé API Anthropic valide est renseignée. En cas d'erreur, le message s'affiche directement dans la metabox.
+= Does it support Yoast SEO and Rank Math? =
+Yes. If a focus keyword is set in either plugin, it is passed to Claude as part of the analysis context.
 
 == Screenshots ==
 
-1. Metabox "Analyse Titre SEO" dans l'éditeur d'articles avec score et recommandations.
-2. Page de réglages (Réglages → WS SEO Title AI) — types de publication et modèle.
-3. Résultat détaillé avec atouts, problèmes et recommandations.
+1. Metabox in the post editor showing score, verdict and recommendations.
+2. Detailed analysis with strengths, issues and improvement suggestions.
+3. Settings page — post types and Claude model selection.
 
 == Changelog ==
 
 = 1.0.0 =
-* Version initiale.
+* Initial release.

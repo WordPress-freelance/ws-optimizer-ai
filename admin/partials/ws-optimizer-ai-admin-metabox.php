@@ -1,87 +1,73 @@
 <?php
+// $post is available via render_metabox().
 defined( 'ABSPATH' ) || exit;
 
-// $post est disponible via render_metabox().
-$cached_analysis  = get_post_meta( $post->ID, '_wsoa_last_analysis', true );
-$cached_title_val = get_post_meta( $post->ID, '_wsoa_last_analyzed_title', true );
-$has_cache        = ! empty( $cached_analysis ) && is_array( $cached_analysis );
+$last_analysis = get_post_meta( $post->ID, '_wsoa_last_analysis', true );
+$last_title    = get_post_meta( $post->ID, '_wsoa_last_analyzed_title', true );
 ?>
-<div class="wsoa-metabox">
+<div id="wsoa-metabox-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-metabox">
 
-    <div class="wsoa-metabox__actions">
-        <button type="button"
-                class="wsoa-btn-analyze"
-                data-post-id="<?php echo esc_attr( $post->ID ); ?>">
-            <?php echo $has_cache
-                ? esc_html__( 'Ré-analyser', 'ws-optimizer-ai' )
-                : esc_html__( 'Analyser le titre', 'ws-optimizer-ai' ); ?>
-        </button>
-        <span class="wsoa-spinner" style="display:none;" aria-hidden="true"></span>
-    </div>
-
-    <?php if ( $cached_title_val ) : ?>
-        <p class="wsoa-metabox__cached-title">
-            <?php echo esc_html( sprintf(
-                /* translators: %s: titre précédemment analysé */
-                __( 'Analysé : « %s »', 'ws-optimizer-ai' ),
-                $cached_title_val
-            ) ); ?>
+    <?php if ( $last_analysis && is_array( $last_analysis ) ) : ?>
+    <div id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-result">
+        <?php if ( $last_title ) : ?>
+        <p class="wsoa-analyzed-title">
+            <?php printf( esc_html__( 'Analysé : « %s »', 'ws-optimizer-ai' ), esc_html( $last_title ) ); ?>
         </p>
-    <?php endif; ?>
+        <?php endif; ?>
 
-    <div class="wsoa-metabox__result" id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>">
-        <?php if ( $has_cache ) :
-            $a     = $cached_analysis;
-            $score = isset( $a['score'] ) ? (int) $a['score'] : 0;
-            $color = $score >= 80 ? '#22c55e' : ( $score >= 60 ? '#f59e0b' : '#ef4444' );
+        <?php
+        $score       = absint( $last_analysis['score'] ?? 0 );
+        $score_class = $score >= 80 ? 'wsoa-score--ok' : ( $score >= 60 ? 'wsoa-score--warn' : 'wsoa-score--err' );
         ?>
-        <div class="wsoa-result">
-            <div class="wsoa-result__score" style="color:<?php echo esc_attr( $color ); ?>">
-                <?php echo esc_html( $score ); ?><span>/100</span>
-            </div>
-            <div class="wsoa-result__verdict">
-                <?php echo esc_html( $a['verdict'] ?? '' ); ?>
-            </div>
-            <?php if ( ! empty( $a['analysis'] ) ) : ?>
-                <p class="wsoa-result__text"><?php echo esc_html( $a['analysis'] ); ?></p>
-            <?php endif; ?>
+        <div class="wsoa-score <?php echo esc_attr( $score_class ); ?>">
+            <span class="wsoa-score__value"><?php echo esc_html( $score ); ?></span>
+            <span class="wsoa-score__max">/100</span>
+        </div>
 
-            <?php if ( ! empty( $a['strengths'] ) ) : ?>
-                <div class="wsoa-result__section wsoa-result__section--ok">
-                    <strong>✅ <?php esc_html_e( 'Atouts', 'ws-optimizer-ai' ); ?></strong>
-                    <ul>
-                        <?php foreach ( $a['strengths'] as $s ) : ?>
-                            <li><?php echo esc_html( $s ); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+        <?php if ( ! empty( $last_analysis['verdict'] ) ) : ?>
+        <p class="wsoa-verdict"><?php echo esc_html( $last_analysis['verdict'] ); ?></p>
+        <?php endif; ?>
 
-            <?php if ( ! empty( $a['issues'] ) ) : ?>
-                <div class="wsoa-result__section wsoa-result__section--err">
-                    <strong>❌ <?php esc_html_e( 'Problèmes', 'ws-optimizer-ai' ); ?></strong>
-                    <ul>
-                        <?php foreach ( $a['issues'] as $issue ) :
-                            $icon = ( isset( $issue['severity'] ) && 'critical' === $issue['severity'] ) ? '🚨' : '⚠️';
-                        ?>
-                            <li><?php echo $icon . ' ' . esc_html( $issue['message'] ?? '' ); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+        <?php if ( ! empty( $last_analysis['analysis'] ) ) : ?>
+        <p class="wsoa-analysis"><?php echo esc_html( $last_analysis['analysis'] ); ?></p>
+        <?php endif; ?>
 
-            <?php if ( ! empty( $a['recommendations'] ) ) : ?>
-                <div class="wsoa-result__section wsoa-result__section--tip">
-                    <strong>💡 <?php esc_html_e( 'Recommandations', 'ws-optimizer-ai' ); ?></strong>
-                    <ul>
-                        <?php foreach ( $a['recommendations'] as $r ) : ?>
-                            <li><?php echo esc_html( $r ); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+        <?php if ( ! empty( $last_analysis['strengths'] ) ) : ?>
+        <div class="wsoa-section wsoa-section--ok">
+            <strong><?php esc_html_e( 'Atouts', 'ws-optimizer-ai' ); ?></strong>
+            <ul><?php foreach ( $last_analysis['strengths'] as $s ) : ?>
+                <li><?php echo esc_html( $s ); ?></li>
+            <?php endforeach; ?></ul>
+        </div>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $last_analysis['issues'] ) ) : ?>
+        <div class="wsoa-section wsoa-section--err">
+            <strong><?php esc_html_e( 'Problèmes', 'ws-optimizer-ai' ); ?></strong>
+            <ul><?php foreach ( $last_analysis['issues'] as $issue ) :
+                $icon = ( 'critical' === ( $issue['severity'] ?? '' ) ) ? '🚨' : '⚠️';
+                ?>
+                <li><?php echo esc_html( $icon . ' ' . $issue['message'] ); ?></li>
+            <?php endforeach; ?></ul>
+        </div>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $last_analysis['recommendations'] ) ) : ?>
+        <div class="wsoa-section wsoa-section--tip">
+            <strong><?php esc_html_e( 'Recommandations', 'ws-optimizer-ai' ); ?></strong>
+            <ul><?php foreach ( $last_analysis['recommendations'] as $r ) : ?>
+                <li><?php echo esc_html( $r ); ?></li>
+            <?php endforeach; ?></ul>
         </div>
         <?php endif; ?>
     </div>
+    <?php else : ?>
+    <div id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-result wsoa-result--empty"></div>
+    <?php endif; ?>
 
+    <button type="button" class="wsoa-btn wsoa-analyze-btn" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+        <?php echo $last_analysis
+            ? esc_html__( 'Ré-analyser', 'ws-optimizer-ai' )
+            : esc_html__( 'Analyser le titre', 'ws-optimizer-ai' ); ?>
+    </button>
 </div>
