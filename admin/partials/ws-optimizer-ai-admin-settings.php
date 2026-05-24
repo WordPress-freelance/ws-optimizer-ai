@@ -11,7 +11,19 @@ $all_types  = get_post_types( [ 'public' => true ], 'objects' );
   <?php include __DIR__ . '/ws-optimizer-ai-admin-header.php'; ?>
   <main class="ws-main">
     <h1 class="ws-page-title">
-      <span class="ws-title-logo">AI</span>
+      <svg class="ws-title-logo" width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="7" fill="#221D32"/>
+  <!-- Lignes de titre -->
+  <rect x="6" y="8" width="14" height="2.5" rx="1.25" fill="#7C5CBF"/>
+  <rect x="6" y="13" width="10" height="2" rx="1" fill="#4A4260"/>
+  <rect x="6" y="17" width="12" height="2" rx="1" fill="#4A4260"/>
+  <!-- Badge score -->
+  <circle cx="23" cy="11" r="5" fill="#1A1724" stroke="#7C5CBF" stroke-width="1.2"/>
+  <text x="23" y="14.5" text-anchor="middle" font-size="6" font-weight="700" fill="#9B8EC4" font-family="Inter,sans-serif">AI</text>
+  <!-- Flèche vers le haut = amélioration -->
+  <path d="M9 24l3-3 3 3" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="12" y1="21" x2="12" y2="26" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
       WS SEO Title AI <span><?php esc_html_e( 'Réglages', 'ws-optimizer-ai' ); ?></span>
     </h1>
 
