@@ -196,7 +196,7 @@ class AnalyzerTest extends WebStrategyTestCase {
     // ── call_claude ──────────────────────────────────────────────────────────
 
     public function test_call_claude_returns_parsed_data_on_success() {
-        $json_str = '{"score":90,"verdict":"🏆 Parfait","strengths":["Optimal"],"issues":[],"recommendations":[],"analysis":"Excellent."}';
+        $json_str = '{"score":90,"verdict":"OK","strengths":["Good"],"issues":[],"recommendations":[],"analysis":"Fine."}';
 
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
             'return' => [ 'content' => [ [ 'text' => $json_str ] ] ],
@@ -206,6 +206,54 @@ class AnalyzerTest extends WebStrategyTestCase {
 
         $this->assertTrue( $result['success'] );
         $this->assertEquals( 90, $result['data']['score'] );
+    }
+
+    public function test_call_claude_handles_real_object_with_get_text() {
+        // Real wp_ai_client_prompt() returns WP_AI_Client_Prompt_Builder in WP 7.0 — not an array.
+        // This test would have caught the fatal error before shipping.
+        $json_str = '{"score":75,"verdict":"Good","strengths":[],"issues":[],"recommendations":[],"analysis":"OK."}';
+        $obj = new class( $json_str ) {
+            private $t;
+            public function __construct( $t ) { $this->t = $t; }
+            public function get_text() { return $this->t; }
+        };
+
+        WP_Mock::userFunction( 'wp_ai_client_prompt', [ 'return' => $obj ] );
+
+        $result = $this->invoke_method( $this->analyzer, 'call_claude', [ 'prompt' ] );
+
+        $this->assertTrue( $result['success'] );
+        $this->assertEquals( 75, $result['data']['score'] );
+    }
+
+    public function test_extract_text_from_array() {
+        $result = $this->invoke_method( $this->analyzer, 'extract_text', [
+            [ 'content' => [ [ 'text' => '{"score":80}' ] ] ]
+        ] );
+        $this->assertEquals( '{"score":80}', $result );
+    }
+
+    public function test_extract_text_from_object_with_get_text() {
+        $obj = new class { public function get_text() { return '{"score":88}'; } };
+        $result = $this->invoke_method( $this->analyzer, 'extract_text', [ $obj ] );
+        $this->assertEquals( '{"score":88}', $result );
+    }
+
+    public function test_extract_text_from_object_via_json_encode() {
+        WP_Mock::userFunction( 'wp_json_encode', [
+            'return' => function( $data ) { return json_encode( $data ); },
+        ] );
+        $obj          = new \stdClass();
+        $inner        = new \stdClass();
+        $inner->text  = '{"score":65}';
+        $obj->content = [ $inner ];
+        $result = $this->invoke_method( $this->analyzer, 'extract_text', [ $obj ] );
+        $this->assertEquals( '{"score":65}', $result );
+    }
+
+    public function test_extract_text_from_scalar() {
+        $result = $this->invoke_method( $this->analyzer, 'extract_text', [ '{"score":50}' ] );
+        $this->assertEquals( '{"score":50}', $result );
     }
 
     public function test_call_claude_handles_exception() {

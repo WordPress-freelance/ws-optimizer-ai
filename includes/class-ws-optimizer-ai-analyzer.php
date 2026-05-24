@@ -86,14 +86,47 @@ class WS_Optimizer_AI_Analyzer {
     }
 
     /**
-     * Parse the raw Claude response string into an array.
+     * Extract plain text from wp_ai_client_prompt() response.
+     * The function may return an array, an object, or a scalar depending on WP version.
+     */
+    private function extract_text( $response ) {
+        // Array: ['content'][0]['text']
+        if ( is_array( $response ) && isset( $response['content'][0]['text'] ) ) {
+            return (string) $response['content'][0]['text'];
+        }
+        // Object: try common methods first
+        if ( is_object( $response ) ) {
+            if ( method_exists( $response, 'get_text' ) ) {
+                return (string) $response->get_text();
+            }
+            if ( method_exists( $response, 'get_content' ) ) {
+                return (string) $response->get_content();
+            }
+            // Convert to array via JSON and try canonical structure
+            $arr = json_decode( wp_json_encode( $response ), true );
+            if ( is_array( $arr ) && isset( $arr['content'][0]['text'] ) ) {
+                return (string) $arr['content'][0]['text'];
+            }
+            // Object with direct text/content scalar property
+            if ( isset( $response->text ) && is_scalar( $response->text ) ) {
+                return (string) $response->text;
+            }
+            if ( isset( $response->content ) && is_scalar( $response->content ) ) {
+                return (string) $response->content;
+            }
+        }
+        // Scalar fallback
+        if ( is_scalar( $response ) ) {
+            return (string) $response;
+        }
+        return '';
+    }
+
+    /**
+     * Parse the raw Claude response into an array.
      */
     public function parse_response( $response ) {
-        if ( is_array( $response ) ) {
-            $text = $response['content'][0]['text'] ?? '';
-        } else {
-            $text = (string) $response;
-        }
+        $text = $this->extract_text( $response );
 
         // Strip markdown backtick fences if present
         $text = preg_replace( '/^```json\s*|\s*```$/m', '', trim( $text ) );
