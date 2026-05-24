@@ -25,6 +25,20 @@ class AdminTest extends WebStrategyTestCase {
         $this->admin = new WS_Optimizer_AI_Admin( 'ws-optimizer-ai', '1.0.0' );
     }
 
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private function make_builder( $text ) {
+        return new class( $text ) {
+            private $t;
+            public function __construct( $t ) { $this->t = $t; }
+            public function usingModel( $m ) { return $this; }
+            public function usingMaxTokens( $n ) { return $this; }
+            public function generate_text() { return $this->t; }
+            public function __call( $name, $args ) { return $this; }
+        };
+    }
+
     // ── Constructor ───────────────────────────────────────────────────────────
 
     public function test_constructor_sets_plugin_name() {
@@ -316,7 +330,7 @@ class AdminTest extends WebStrategyTestCase {
         ];
 
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
-            'return' => [ 'content' => [ [ 'text' => json_encode( $analysis ) ] ] ],
+            'return' => $this->make_builder( json_encode( $analysis ) ),
         ] );
 
         $success = null;
@@ -348,7 +362,7 @@ class AdminTest extends WebStrategyTestCase {
         $analysis = [ 'score' => 90, 'verdict' => '🔥', 'analysis' => 'x', 'strengths' => [], 'issues' => [], 'recommendations' => [] ];
 
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
-            'return' => [ 'content' => [ [ 'text' => json_encode( $analysis ) ] ] ],
+            'return' => $this->make_builder( json_encode( $analysis ) ),
         ] );
         WP_Mock::userFunction( 'wp_send_json_success', [ 'return' => null ] );
         WP_Mock::userFunction( 'current_time', [ 'return' => 1700000000 ] );
@@ -378,7 +392,7 @@ class AdminTest extends WebStrategyTestCase {
 
         // Analyzer returns error (invalid JSON from Claude)
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
-            'return' => [ 'content' => [ [ 'text' => 'not json at all' ] ] ],
+            'return' => $this->make_builder( 'not json at all' ),
         ] );
 
         $error = null;

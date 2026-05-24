@@ -144,20 +144,27 @@ class WS_Optimizer_AI_Analyzer {
      */
     public function call_claude( $prompt ) {
         try {
-            $response = wp_ai_client_prompt(
-                'Anthropic',
-                'text',
-                [
-                    'prompt'     => $prompt,
-                    'model'      => $this->model,
-                    'max_tokens' => $this->max_tokens,
-                ]
-            );
+            // WordPress AI Client builder pattern:
+            // wp_ai_client_prompt($text) returns a builder — must chain config
+            // methods then call generate_text() to actually fire the request.
+            $builder = wp_ai_client_prompt( $prompt )
+                ->usingModel( $this->model )
+                ->usingMaxTokens( $this->max_tokens );
 
-            // Log raw response for debugging
-            $this->log_response( $response );
+            // Log builder state before generation
+            $this->log_response( $builder );
 
-            return $this->parse_response( $response );
+            // Trigger the actual API call
+            $result = $builder->generate_text();
+
+            // Log what generate_text() returns so we can adapt extract_text() if needed
+            $this->log_entry( 'generate_text_result', [
+                'type'  => gettype( $result ),
+                'class' => is_object( $result ) ? get_class( $result ) : null,
+                'value' => is_scalar( $result ) ? substr( (string) $result, 0, 300 ) : substr( wp_json_encode( $result ), 0, 300 ),
+            ] );
+
+            return $this->parse_response( $result );
         } catch ( \Exception $e ) {
             $this->log_entry( 'exception', $e->getMessage() );
             return [

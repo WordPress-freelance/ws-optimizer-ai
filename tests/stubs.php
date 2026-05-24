@@ -117,8 +117,14 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
 }
 // wp_ai_client_prompt : stub pour WordPress 7.0 AI Client
 if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
-    function wp_ai_client_prompt( $provider, $type, $args ) {
-        return [ 'content' => [ [ 'text' => '' ] ] ];
+    function wp_ai_client_prompt( $prompt_text, $arg2 = null, $arg3 = null ) {
+        // Returns a mock builder object that supports ->usingModel()->usingMaxTokens()->generate_text()
+        return new class {
+            public function usingModel( $m ) { return $this; }
+            public function usingMaxTokens( $t ) { return $this; }
+            public function generate_text() { return ''; }
+            public function __call( $name, $args ) { return $this; }
+        };
     }
 }
 if ( ! function_exists( 'current_time' ) ) {

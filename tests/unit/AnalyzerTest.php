@@ -195,12 +195,32 @@ class AnalyzerTest extends WebStrategyTestCase {
 
     // ── call_claude ──────────────────────────────────────────────────────────
 
+    /**
+     * Build a chainable WP_AI_Client_Prompt_Builder mock.
+     * generate_text() returns $text_to_return.
+     */
+    private function make_builder( $text_to_return ) {
+        return new class( $text_to_return ) {
+            private $text;
+            public function __construct( $t ) { $this->text = $t; }
+            public function usingModel( $m ) { return $this; }
+            public function usingMaxTokens( $t ) { return $this; }
+            public function generate_text() { return $this->text; }
+            public function __call( $name, $args ) { return $this; }
+        };
+    }
+
     public function test_call_claude_returns_parsed_data_on_success() {
         $json_str = '{"score":90,"verdict":"OK","strengths":["Good"],"issues":[],"recommendations":[],"analysis":"Fine."}';
 
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
-            'return' => [ 'content' => [ [ 'text' => $json_str ] ] ],
+            'return' => $this->make_builder( $json_str ),
         ] );
+        WP_Mock::userFunction( 'wp_json_encode', [
+            'return' => function( $data, $opts = 0 ) { return json_encode( $data, $opts ); },
+        ] );
+        WP_Mock::userFunction( 'get_option', [ 'return' => [] ] );
+        WP_Mock::userFunction( 'update_option', [ 'return' => true ] );
 
         $result = $this->invoke_method( $this->analyzer, 'call_claude', [ 'test prompt' ] );
 
@@ -208,17 +228,45 @@ class AnalyzerTest extends WebStrategyTestCase {
         $this->assertEquals( 90, $result['data']['score'] );
     }
 
+    public function test_call_claude_builder_chains_model_and_max_tokens() {
+        // Verify generate_text() is called and the result is parsed correctly.
+        // Builder chaining (usingModel/usingMaxTokens) is verified by the
+        // make_builder stub returning $this for chaining without crashing.
+        $json_str = '{"score":85,"verdict":"Good","strengths":[],"issues":[],"recommendations":[],"analysis":"Ok."}';
+
+        WP_Mock::userFunction( 'wp_ai_client_prompt', [
+            'return' => $this->make_builder( $json_str ),
+        ] );
+        WP_Mock::userFunction( 'wp_json_encode', [
+            'return' => function( $data, $opts = 0 ) { return json_encode( $data, $opts ); },
+        ] );
+        WP_Mock::userFunction( 'get_option', [ 'return' => [] ] );
+        WP_Mock::userFunction( 'update_option', [ 'return' => true ] );
+
+        $result = $this->invoke_method( $this->analyzer, 'call_claude', [ 'test prompt' ] );
+
+        // If generate_text() was not called, result would be an error
+        $this->assertTrue( $result['success'], 'generate_text() must be called on the builder' );
+        $this->assertEquals( 85, $result['data']['score'] );
+    }
+
     public function test_call_claude_handles_real_object_with_get_text() {
-        // Real wp_ai_client_prompt() returns WP_AI_Client_Prompt_Builder in WP 7.0 — not an array.
-        // This test would have caught the fatal error before shipping.
+        // generate_text() returns an object with get_text() — also test extract_text on that path
         $json_str = '{"score":75,"verdict":"Good","strengths":[],"issues":[],"recommendations":[],"analysis":"OK."}';
-        $obj = new class( $json_str ) {
+        $inner    = new class( $json_str ) {
             private $t;
             public function __construct( $t ) { $this->t = $t; }
             public function get_text() { return $this->t; }
         };
 
-        WP_Mock::userFunction( 'wp_ai_client_prompt', [ 'return' => $obj ] );
+        WP_Mock::userFunction( 'wp_ai_client_prompt', [
+            'return' => $this->make_builder( $inner ),
+        ] );
+        WP_Mock::userFunction( 'wp_json_encode', [
+            'return' => function( $data, $opts = 0 ) { return json_encode( $data, $opts ); },
+        ] );
+        WP_Mock::userFunction( 'get_option', [ 'return' => [] ] );
+        WP_Mock::userFunction( 'update_option', [ 'return' => true ] );
 
         $result = $this->invoke_method( $this->analyzer, 'call_claude', [ 'prompt' ] );
 
@@ -260,6 +308,8 @@ class AnalyzerTest extends WebStrategyTestCase {
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
             'return' => function () { throw new \Exception( 'Erreur API' ); },
         ] );
+        WP_Mock::userFunction( 'get_option', [ 'return' => [] ] );
+        WP_Mock::userFunction( 'update_option', [ 'return' => true ] );
 
         $result = $this->invoke_method( $this->analyzer, 'call_claude', [ 'test prompt' ] );
 
@@ -269,8 +319,13 @@ class AnalyzerTest extends WebStrategyTestCase {
 
     public function test_call_claude_returns_error_on_invalid_response() {
         WP_Mock::userFunction( 'wp_ai_client_prompt', [
-            'return' => [ 'content' => [ [ 'text' => 'invalid json response' ] ] ],
+            'return' => $this->make_builder( 'invalid json response' ),
         ] );
+        WP_Mock::userFunction( 'wp_json_encode', [
+            'return' => function( $data, $opts = 0 ) { return json_encode( $data, $opts ); },
+        ] );
+        WP_Mock::userFunction( 'get_option', [ 'return' => [] ] );
+        WP_Mock::userFunction( 'update_option', [ 'return' => true ] );
 
         $result = $this->invoke_method( $this->analyzer, 'call_claude', [ 'prompt' ] );
 
