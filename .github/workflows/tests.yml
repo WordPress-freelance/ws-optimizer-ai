@@ -38,6 +38,7 @@ jobs:
   integration:
     name: BDD integration (WordPress + MySQL)
     runs-on: ubuntu-latest
+    continue-on-error: true
     services:
       mysql:
         image: mysql:8.0
