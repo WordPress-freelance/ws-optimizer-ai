@@ -1,0 +1,226 @@
+/* WS SEO Title AI — Admin CSS
+ * Palette WebStrategy — hex direct, pas de CSS vars sur les inputs
+ * ---------------------------------------------------------------- */
+
+/* ── Metabox ─────────────────────────────────────────────────────── */
+.wsoa-metabox {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-size: 13px;
+}
+
+.wsoa-metabox__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.wsoa-btn-analyze {
+    background: #7C5CBF !important;
+    color: #F0EDE8 !important;
+    border: none !important;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: background 0.15s;
+    white-space: nowrap;
+    line-height: 1.6;
+}
+
+.wsoa-btn-analyze:hover:not(:disabled) {
+    background: #9B8EC4 !important;
+}
+
+.wsoa-btn-analyze:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.wsoa-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #9B8EC4;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: wsoa-spin 0.65s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes wsoa-spin {
+    to { transform: rotate(360deg); }
+}
+
+.wsoa-metabox__cached-title {
+    font-size: 11px;
+    color: #9590A8;
+    margin: 0 0 10px;
+    font-style: italic;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Result card ─────────────────────────────────────────────────── */
+.wsoa-result {
+    background: #14121C;
+    border: 1px solid #2E2B38;
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 2px;
+}
+
+.wsoa-result__score {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.wsoa-result__score span {
+    font-size: 13px;
+    color: #9590A8;
+    font-weight: 400;
+}
+
+.wsoa-result__verdict {
+    font-size: 13px;
+    font-weight: 600;
+    color: #F0EDE8;
+    margin-bottom: 8px;
+}
+
+.wsoa-result__text {
+    font-size: 12px;
+    color: #9590A8;
+    font-style: italic;
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+
+.wsoa-result__section {
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.wsoa-result__section strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #C4BFDA;
+}
+
+.wsoa-result__section ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.wsoa-result__section ul li {
+    padding: 2px 0 2px 4px;
+    color: #9590A8;
+    line-height: 1.5;
+}
+
+.wsoa-result__section--ok strong { color: #22c55e; }
+.wsoa-result__section--err strong { color: #ef4444; }
+.wsoa-result__section--tip strong { color: #f59e0b; }
+
+.wsoa-error {
+    color: #ef4444;
+    font-size: 12px;
+    margin: 6px 0 0;
+}
+
+/* ── Settings page ───────────────────────────────────────────────── */
+.wsoa-settings-page .wsoa-wrap {
+    padding: 24px 28px;
+    color: #C4BFDA;
+}
+
+.wsoa-settings-page .wsoa-wrap h1 {
+    color: #F0EDE8;
+    font-size: 26px;
+    margin-bottom: 4px;
+    border-bottom: none;
+}
+
+.wsoa-subtitle {
+    color: #9590A8;
+    margin: 0 0 28px;
+    font-size: 14px;
+}
+
+.wsoa-settings-page .form-table th {
+    color: #C4BFDA;
+    font-weight: 500;
+    padding-top: 20px;
+}
+
+.wsoa-settings-page .form-table td {
+    color: #9590A8;
+}
+
+.wsoa-settings-page .form-table label {
+    color: #C4BFDA;
+}
+
+.wsoa-settings-page .description {
+    color: #4A4260;
+    font-size: 12px;
+}
+
+.wsoa-settings-page input[type="checkbox"] {
+    accent-color: #7C5CBF;
+}
+
+.wsoa-settings-page select {
+    background: #1A1724 !important;
+    color: #F0EDE8 !important;
+    border: 1px solid #2E2B38 !important;
+    box-shadow: none !important;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.wsoa-settings-page .button-primary {
+    background: #7C5CBF !important;
+    border-color: #7C5CBF !important;
+    color: #F0EDE8 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.wsoa-settings-page .button-primary:hover {
+    background: #9B8EC4 !important;
+    border-color: #9B8EC4 !important;
+}
+
+.wsoa-info-box {
+    margin-top: 32px;
+    background: #1A1724;
+    border: 1px solid #2E2B38;
+    border-left: 3px solid #7C5CBF;
+    border-radius: 4px;
+    padding: 16px 20px;
+    max-width: 620px;
+}
+
+.wsoa-info-box h3 {
+    color: #F0EDE8;
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+
+.wsoa-info-box p {
+    color: #9590A8;
+    font-size: 13px;
+    margin: 0 0 8px;
+}
+
+.wsoa-info-box a {
+    color: #A899D4;
+}

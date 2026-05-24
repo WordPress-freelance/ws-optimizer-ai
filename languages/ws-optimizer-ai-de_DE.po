@@ -1,0 +1,74 @@
+# Allemand translation of ws-optimizer-ai
+msgid ""
+msgstr ""
+"Project-Id-Version: ws-optimizer-ai\n"
+"Language: de_DE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Accès refusé."
+msgstr "Zugriff verweigert."
+
+msgid "Analyse Titre SEO (IA)"
+msgstr "SEO-Titel-Analyse (KI)"
+
+msgid "Analyse en cours…"
+msgstr "Analyse läuft…"
+
+msgid "Analyser le titre"
+msgstr "Titel analysieren"
+
+msgid "Analysé : « %s »"
+msgstr "Analysiert: „%s“"
+
+msgid "Atouts"
+msgstr "Stärken"
+
+msgid "Ce plugin nécessite WordPress avec le module AI Client activé et un compte Anthropic configuré (Claude)."
+msgstr "Dieses Plugin erfordert WordPress mit aktiviertem AI-Client-Modul und konfiguriertem Anthropic-Konto (Claude)."
+
+msgid "Configuration générale"
+msgstr "Allgemeine Einstellungen"
+
+msgid "Documentation →"
+msgstr "Dokumentation →"
+
+msgid "Enregistrer les réglages"
+msgstr "Einstellungen speichern"
+
+msgid "Le titre est vide."
+msgstr "Der Titel ist leer."
+
+msgid "Modèle Claude"
+msgstr "Claude-Modell"
+
+msgid "Non définie"
+msgstr "Nicht definiert"
+
+msgid "Permission refusée."
+msgstr "Berechtigung verweigert."
+
+msgid "Problèmes"
+msgstr "Probleme"
+
+msgid "Prérequis"
+msgstr "Voraussetzungen"
+
+msgid "Recommandations"
+msgstr "Empfehlungen"
+
+msgid "Ré-analyser"
+msgstr "Neu analysieren"
+
+msgid "Réponse Claude invalide."
+msgstr "Ungültige Claude-Antwort."
+
+msgid "Types de publication"
+msgstr "Beitragstypen"
+
+msgid "WS SEO Title AI"
+msgstr "WS SEO Title AI"
+
+msgid "WordPress AI Client requis (WordPress 7.0+)."
+msgstr "WordPress AI Client erforderlich (WordPress 7.0+)."

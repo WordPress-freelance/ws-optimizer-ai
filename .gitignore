@@ -1,0 +1,7 @@
+/vendor/
+composer.lock
+.phpunit.result.cache
+coverage/
+clover.xml
+*.zip
+/assets/*.png

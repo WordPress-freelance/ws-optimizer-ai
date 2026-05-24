@@ -1,0 +1,74 @@
+# Anglais translation of ws-optimizer-ai
+msgid ""
+msgstr ""
+"Project-Id-Version: ws-optimizer-ai\n"
+"Language: en_US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Accès refusé."
+msgstr "Access denied."
+
+msgid "Analyse Titre SEO (IA)"
+msgstr "SEO Title Analysis (AI)"
+
+msgid "Analyse en cours…"
+msgstr "Analyzing…"
+
+msgid "Analyser le titre"
+msgstr "Analyze title"
+
+msgid "Analysé : « %s »"
+msgstr "Analyzed: \"%s\""
+
+msgid "Atouts"
+msgstr "Strengths"
+
+msgid "Ce plugin nécessite WordPress avec le module AI Client activé et un compte Anthropic configuré (Claude)."
+msgstr "This plugin requires WordPress with the AI Client module enabled and an Anthropic account configured (Claude)."
+
+msgid "Configuration générale"
+msgstr "General Settings"
+
+msgid "Documentation →"
+msgstr "Documentation →"
+
+msgid "Enregistrer les réglages"
+msgstr "Save Settings"
+
+msgid "Le titre est vide."
+msgstr "Title is empty."
+
+msgid "Modèle Claude"
+msgstr "Claude model"
+
+msgid "Non définie"
+msgstr "Not defined"
+
+msgid "Permission refusée."
+msgstr "Permission denied."
+
+msgid "Problèmes"
+msgstr "Issues"
+
+msgid "Prérequis"
+msgstr "Requirements"
+
+msgid "Recommandations"
+msgstr "Recommendations"
+
+msgid "Ré-analyser"
+msgstr "Re-analyze"
+
+msgid "Réponse Claude invalide."
+msgstr "Invalid Claude response."
+
+msgid "Types de publication"
+msgstr "Post types"
+
+msgid "WS SEO Title AI"
+msgstr "WS SEO Title AI"
+
+msgid "WordPress AI Client requis (WordPress 7.0+)."
+msgstr "WordPress AI Client required (WordPress 7.0+)."

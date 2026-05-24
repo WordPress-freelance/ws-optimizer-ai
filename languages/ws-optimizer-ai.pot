@@ -1,0 +1,72 @@
+# Translation template for ws-optimizer-ai
+msgid ""
+msgstr ""
+"Project-Id-Version: ws-optimizer-ai\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"X-Domain: ws-optimizer-ai\n"
+
+msgid "Accès refusé."
+msgstr ""
+
+msgid "Analyse Titre SEO (IA)"
+msgstr ""
+
+msgid "Analyse en cours…"
+msgstr ""
+
+msgid "Analyser le titre"
+msgstr ""
+
+msgid "Analysé : « %s »"
+msgstr ""
+
+msgid "Atouts"
+msgstr ""
+
+msgid "Ce plugin nécessite WordPress avec le module AI Client activé et un compte Anthropic configuré (Claude)."
+msgstr ""
+
+msgid "Configuration générale"
+msgstr ""
+
+msgid "Documentation →"
+msgstr ""
+
+msgid "Enregistrer les réglages"
+msgstr ""
+
+msgid "Le titre est vide."
+msgstr ""
+
+msgid "Modèle Claude"
+msgstr ""
+
+msgid "Non définie"
+msgstr ""
+
+msgid "Permission refusée."
+msgstr ""
+
+msgid "Problèmes"
+msgstr ""
+
+msgid "Prérequis"
+msgstr ""
+
+msgid "Recommandations"
+msgstr ""
+
+msgid "Ré-analyser"
+msgstr ""
+
+msgid "Réponse Claude invalide."
+msgstr ""
+
+msgid "Types de publication"
+msgstr ""
+
+msgid "WS SEO Title AI"
+msgstr ""
+
+msgid "WordPress AI Client requis (WordPress 7.0+)."
+msgstr ""
