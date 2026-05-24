@@ -23,7 +23,7 @@ class WS_Optimizer_AI_Admin {
         }
 
         $is_post_screen = in_array( $screen->base, [ 'post', 'edit' ], true );
-        $is_settings    = ( $screen->id === 'settings_page_ws-optimizer-ai' );
+        $is_settings    = in_array( $screen->id, [ 'settings_page_ws-optimizer-ai', 'admin_page_ws-optimizer-ai-logs' ], true );
 
         if ( $is_post_screen || $is_settings ) {
             wp_enqueue_style(
@@ -77,7 +77,8 @@ class WS_Optimizer_AI_Admin {
 
     public function add_admin_body_class( $classes ) {
         $screen = get_current_screen();
-        if ( $screen && $screen->id === 'settings_page_ws-optimizer-ai' ) {
+        $wsoa_screens = [ 'settings_page_ws-optimizer-ai', 'admin_page_ws-optimizer-ai-logs' ];
+        if ( $screen && in_array( $screen->id, $wsoa_screens, true ) ) {
             $classes .= ' wsoa-settings-page';
         }
         return $classes;
@@ -85,7 +86,8 @@ class WS_Optimizer_AI_Admin {
 
     public function inline_reset_css() {
         $screen = get_current_screen();
-        if ( ! $screen || $screen->id !== 'settings_page_ws-optimizer-ai' ) {
+        $wsoa_screens = [ 'settings_page_ws-optimizer-ai', 'admin_page_ws-optimizer-ai-logs' ];
+        if ( ! $screen || ! in_array( $screen->id, $wsoa_screens, true ) ) {
             return;
         }
         echo '<style>

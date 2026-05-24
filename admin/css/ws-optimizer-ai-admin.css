@@ -366,9 +366,14 @@
     font-weight: 500;
 }
 .wsoa-btn-save-capture {
-    background: #2E2B38 !important;
+    background: #221D32 !important;
     border-color: #4A4260 !important;
     color: #C4BFDA !important;
+}
+.wsoa-btn-save-capture:hover {
+    background: #2E2B38 !important;
+    border-color: #7C5CBF !important;
+    color: #F0EDE8 !important;
 }
 .wsoa-logs-notice {
     padding: 10px 14px;
