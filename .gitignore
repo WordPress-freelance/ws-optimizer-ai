@@ -5,4 +5,3 @@ composer.lock
 coverage/
 clover.xml
 *.zip
-/assets/*.png
