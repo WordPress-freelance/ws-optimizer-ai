@@ -11,7 +11,7 @@ $all_types  = get_post_types( [ 'public' => true ], 'objects' );
   <?php include __DIR__ . '/ws-optimizer-ai-admin-header.php'; ?>
   <main class="ws-main">
     <h1 class="ws-page-title">
-      <svg class="ws-title-logo" width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="7" fill="#221D32"/><rect x="7" y="9" width="18" height="3" rx="1.5" fill="#7C5CBF"/><rect x="7" y="15" width="12" height="2" rx="1" fill="#9B8EC4"/><rect x="7" y="20" width="8" height="2" rx="1" fill="#4A4260"/><circle cx="24" cy="22" r="4" fill="#221D32" stroke="#7C5CBF" stroke-width="1.5"/><path d="M23 22l1 1 2-2" stroke="#9B8EC4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="ws-title-logo">AI</span>
       WS SEO Title AI <span><?php esc_html_e( 'Réglages', 'ws-optimizer-ai' ); ?></span>
     </h1>
 

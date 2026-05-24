@@ -44,7 +44,18 @@
 .ws-main { flex:1; padding:28px 32px 40px; background:var(--ws-bg); }
 .ws-page-title { font-family:'Lora',serif; font-size:22px; font-weight:600; color:var(--ws-t1); letter-spacing:-.02em; display:flex; align-items:center; gap:12px; }
 .ws-page-title span { color:var(--ws-accent-m); font-style:italic; }
-.ws-title-logo { flex-shrink:0; border-radius:8px; border:.5px solid var(--ws-border-a); }
+.ws-title-logo {
+  flex-shrink:0; border-radius:6px;
+  background:var(--ws-bg-deep); border:.5px solid var(--ws-border-a);
+  width:36px !important; height:36px !important;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:700; color:var(--ws-accent-m);
+  font-family:'Inter',sans-serif; letter-spacing:.02em;
+}
+/* Prevent Avada/themes from blowing up images or SVGs inside our wrap */
+.ws-admin-wrap img { max-width:100% !important; }
+.ws-admin-wrap svg { overflow:visible; }
+.ws-adminbar-logo img { width:22px !important; height:22px !important; flex-shrink:0; }
 
 /* ── Cards ───────────────────────────────────────────────────────── */
 .ws-card { background:var(--ws-bg-alt); border:.5px solid var(--ws-border); border-radius:10px; padding:20px; margin-bottom:16px; }

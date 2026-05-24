@@ -4,7 +4,7 @@ $wsoa_base = admin_url( 'options-general.php?page=ws-optimizer-ai' );
 ?>
 <div class="ws-adminbar">
   <div class="ws-adminbar-logo">
-    <img src="<?php echo esc_url( WS_OPTIMIZER_AI_URL . 'assets/icon-128x128.png' ); ?>" width="22" height="22" style="border-radius:5px;" alt="WS SEO Title AI">
+    <div class="ws-mark">W</div>
     WebStrategy
   </div>
   <div class="ws-adminbar-links">
