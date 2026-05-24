@@ -1,4 +1,5 @@
-/vendor/
+/vendor/*
+!/vendor/autoload.php
 composer.lock
 .phpunit.result.cache
 coverage/

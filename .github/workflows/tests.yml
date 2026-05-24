@@ -20,15 +20,18 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-      - name: Install test dependencies (no Composer)
+          tools: phpunit
+      - name: Install test dependencies (git clone, no Composer)
         run: |
           mkdir -p vendor/10up vendor/mockery vendor/antecedent vendor/hamcrest
-          git clone --depth 1 --branch 0.5.0 https://github.com/10up/wp_mock.git vendor/10up/wp_mock
-          git clone --depth 1 --branch 1.6.12 https://github.com/mockery/mockery.git vendor/mockery/mockery
-          git clone --depth 1 --branch 2.1.27 https://github.com/antecedent/patchwork.git vendor/antecedent/patchwork
-          git clone --depth 1 https://github.com/hamcrest/hamcrest-php.git vendor/hamcrest/hamcrest-php
+          git clone --depth 1 --branch 0.5.0   https://github.com/10up/wp_mock.git          vendor/10up/wp_mock
+          git clone --depth 1 --branch 1.6.12  https://github.com/mockery/mockery.git       vendor/mockery/mockery
+          git clone --depth 1 --branch 2.1.27  https://github.com/antecedent/patchwork.git  vendor/antecedent/patchwork
+          git clone --depth 1                  https://github.com/hamcrest/hamcrest-php.git  vendor/hamcrest/hamcrest-php
       - name: PHP syntax lint
-        run: find . -path ./vendor -prune -o -name '*.php' -print | xargs -I{} php -l {} | grep -v "No syntax errors" || echo "Lint OK"
+        run: |
+          find . -path ./vendor -prune -o -name '*.php' -print \
+            -exec php -l {} \; | grep -v "No syntax errors" | grep -v "^\./" || echo "Lint OK"
       - name: PHPUnit
         run: phpunit -c phpunit.xml
 
@@ -52,17 +55,17 @@ jobs:
         with:
           php-version: '8.1'
           extensions: mysqli
-          tools: composer:v2, wp-cli
-      - name: Install Subversion
-        run: sudo apt-get update && sudo apt-get install -y subversion
+          tools: phpunit, wp-cli
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion default-mysql-client
       - name: Install WP test suite
         run: bash bin/install-wp-tests.sh wp_test root root 127.0.0.1 latest
       - name: Install test dependencies
         run: |
           mkdir -p vendor/10up vendor/mockery vendor/antecedent vendor/hamcrest
-          git clone --depth 1 --branch 0.5.0 https://github.com/10up/wp_mock.git vendor/10up/wp_mock
-          git clone --depth 1 --branch 1.6.12 https://github.com/mockery/mockery.git vendor/mockery/mockery
-          git clone --depth 1 --branch 2.1.27 https://github.com/antecedent/patchwork.git vendor/antecedent/patchwork
-          git clone --depth 1 https://github.com/hamcrest/hamcrest-php.git vendor/hamcrest/hamcrest-php
+          git clone --depth 1 --branch 0.5.0   https://github.com/10up/wp_mock.git          vendor/10up/wp_mock
+          git clone --depth 1 --branch 1.6.12  https://github.com/mockery/mockery.git       vendor/mockery/mockery
+          git clone --depth 1 --branch 2.1.27  https://github.com/antecedent/patchwork.git  vendor/antecedent/patchwork
+          git clone --depth 1                  https://github.com/hamcrest/hamcrest-php.git  vendor/hamcrest/hamcrest-php
       - name: Run BDD test suite
         run: phpunit -c phpunit-integration.xml
