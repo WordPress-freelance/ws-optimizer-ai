@@ -58,8 +58,10 @@ jobs:
           tools: phpunit:9, wp-cli
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y subversion default-mysql-client
+      - name: Create test database
+        run: mysql -u root -proot -h 127.0.0.1 --protocol=TCP -e "CREATE DATABASE IF NOT EXISTS wp_test;"
       - name: Install WP test suite
-        run: bash bin/install-wp-tests.sh wp_test root root 127.0.0.1 latest
+        run: bash bin/install-wp-tests.sh wp_test root root 127.0.0.1 latest true
       - name: Install test dependencies
         run: |
           mkdir -p vendor/10up vendor/mockery vendor/antecedent vendor/hamcrest
