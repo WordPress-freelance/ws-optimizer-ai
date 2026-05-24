@@ -146,16 +146,21 @@ class WS_Optimizer_AI_Analyzer {
         try {
             // WordPress AI Client builder pattern — wp_ai_client_prompt($text)
             // returns WP_AI_Client_Prompt_Builder. Chain via __call then generate_text().
-            // wp_ai_client_prompt($prompt) returns WP_AI_Client_Prompt_Builder.
-            // usingModel() requires a ModelInterface object — cannot pass a string.
-            // Provider and model are configured by the user in WP Settings > AI Client.
-            $builder = wp_ai_client_prompt( $prompt );
+            // wp_ai_client_prompt( $provider, $type, $args ) returns WP_AI_Client_Prompt_Builder.
+            // Do NOT pass 'model' in args — WP_AI_Client internally calls usingModel()
+            // which requires a ModelInterface object, not a string.
+            // Provider and model are configured by the user in WP Settings > AI.
+            $builder = wp_ai_client_prompt(
+                'Anthropic',
+                'text',
+                [ 'prompt' => $prompt ]
+            );
             $this->log_entry( 'builder_received', [
                 'type'  => gettype( $builder ),
                 'class' => is_object( $builder ) ? get_class( $builder ) : null,
             ] );
 
-            // Trigger the actual API call — provider/model from WP AI Client settings
+            // Trigger the actual API call
             $result = $builder->generate_text();
 
             $this->log_entry( 'generate_text_result', [
