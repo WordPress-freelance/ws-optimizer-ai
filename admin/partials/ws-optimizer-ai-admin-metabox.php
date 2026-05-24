@@ -70,4 +70,5 @@ $last_title    = get_post_meta( $post->ID, '_wsoa_last_analyzed_title', true );
             ? esc_html__( 'Ré-analyser', 'ws-optimizer-ai' )
             : esc_html__( 'Analyser le titre', 'ws-optimizer-ai' ); ?>
     </button>
+    <span class="wsoa-spinner" style="display:none;"></span>
 </div>
