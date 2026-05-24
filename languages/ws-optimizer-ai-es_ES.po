@@ -7,6 +7,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "%d entrée(s)"
+msgstr "%d entrada(s)"
+
+msgid "AI Logs"
+msgstr "Registros de IA"
+
 msgid "Accès refusé."
 msgstr "Acceso denegado."
 
@@ -25,23 +31,23 @@ msgstr "Analizado: «%s»"
 msgid "Atouts"
 msgstr "Puntos fuertes"
 
+msgid "Aucune entrée. Activez la capture puis lancez une analyse depuis un article."
+msgstr "Sin entradas. Activa la captura y luego ejecuta un análisis desde una entrada."
+
+msgid "Capturer les logs IA"
+msgstr "Capturar registros de IA"
+
 msgid "Ce plugin nécessite WordPress avec le module AI Client activé et un compte Anthropic configuré (Claude)."
 msgstr "Este plugin requiere WordPress con el módulo AI Client activado y una cuenta Anthropic configurada (Claude)."
 
-msgid "Configuration générale"
-msgstr "Configuración general"
+msgid "Documentation"
+msgstr "Documentación"
 
-msgid "Documentation →"
-msgstr "Documentación →"
-
-msgid "Enregistrer les réglages"
-msgstr "Guardar ajustes"
+msgid "Enregistrer"
+msgstr "Guardar"
 
 msgid "Le titre est vide."
 msgstr "El título está vacío."
-
-msgid "Modèle Claude"
-msgstr "Modelo Claude"
 
 msgid "Non définie"
 msgstr "No definida"
@@ -61,11 +67,26 @@ msgstr "Recomendaciones"
 msgid "Ré-analyser"
 msgstr "Volver a analizar"
 
+msgid "Réglage enregistré."
+msgstr "Ajuste guardado."
+
+msgid "Réglages"
+msgstr "Ajustes"
+
+msgid "Réglages sauvegardés."
+msgstr "Ajustes guardados."
+
 msgid "Réponse Claude invalide."
 msgstr "Respuesta de Claude inválida."
 
+msgid "Sauvegarder les réglages"
+msgstr "Guardar ajustes"
+
 msgid "Types de publication"
 msgstr "Tipos de entrada"
+
+msgid "Vider les logs"
+msgstr "Vaciar registros"
 
 msgid "WS SEO Title AI"
 msgstr "WS SEO Title AI"

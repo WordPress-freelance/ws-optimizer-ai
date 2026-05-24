@@ -5,6 +5,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "X-Domain: ws-optimizer-ai\n"
 
+msgid "%d entrée(s)"
+msgstr ""
+
+msgid "AI Logs"
+msgstr ""
+
 msgid "Accès refusé."
 msgstr ""
 
@@ -23,22 +29,22 @@ msgstr ""
 msgid "Atouts"
 msgstr ""
 
+msgid "Aucune entrée. Activez la capture puis lancez une analyse depuis un article."
+msgstr ""
+
+msgid "Capturer les logs IA"
+msgstr ""
+
 msgid "Ce plugin nécessite WordPress avec le module AI Client activé et un compte Anthropic configuré (Claude)."
 msgstr ""
 
-msgid "Configuration générale"
+msgid "Documentation"
 msgstr ""
 
-msgid "Documentation →"
-msgstr ""
-
-msgid "Enregistrer les réglages"
+msgid "Enregistrer"
 msgstr ""
 
 msgid "Le titre est vide."
-msgstr ""
-
-msgid "Modèle Claude"
 msgstr ""
 
 msgid "Non définie"
@@ -59,10 +65,25 @@ msgstr ""
 msgid "Ré-analyser"
 msgstr ""
 
+msgid "Réglage enregistré."
+msgstr ""
+
+msgid "Réglages"
+msgstr ""
+
+msgid "Réglages sauvegardés."
+msgstr ""
+
 msgid "Réponse Claude invalide."
 msgstr ""
 
+msgid "Sauvegarder les réglages"
+msgstr ""
+
 msgid "Types de publication"
+msgstr ""
+
+msgid "Vider les logs"
 msgstr ""
 
 msgid "WS SEO Title AI"

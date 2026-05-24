@@ -4,7 +4,7 @@ Tags: seo, ai, title, claude, artificial-intelligence
 Requires at least: 6.7
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,12 @@ Yes. If a focus keyword is set in either plugin, it is passed to Claude as part 
 3. Settings page — post types and Claude model selection.
 
 == Changelog ==
+
+= 2.1.0 =
+* Admin interface rebuilt from scratch on the WebStrategy design system (Lora/Inter, dark palette).
+* Fixed a fatal error when saving settings (missing admin-post handlers).
+* Removed the unused Settings API registration that conflicted with the custom forms.
+* Unified the live and cached analysis result markup.
 
 = 2.0.0 =
 * AI Logs tab: dedicated admin page with capture toggle.

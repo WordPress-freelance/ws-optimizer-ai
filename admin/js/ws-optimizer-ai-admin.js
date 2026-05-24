@@ -6,7 +6,6 @@
 
     /** Récupère le titre courant (Gutenberg ou Classic Editor). */
     function getTitle() {
-        // Gutenberg — le metabox tourne dans un iframe, on tape le window parent.
         try {
             var win = window.parent || window;
             if ( win.wp && win.wp.data && win.wp.data.select ) {
@@ -15,7 +14,6 @@
             }
         } catch ( e ) { /* cross-origin ou pas de parent */ }
 
-        // Classic Editor — champ #title direct ou dans le parent.
         var field = document.getElementById( 'title' );
         if ( field ) return field.value.trim();
 
@@ -37,30 +35,31 @@
         return ( d.i18n && d.i18n[ key ] ) ? d.i18n[ key ] : key;
     }
 
-    function scoreColor( score ) {
-        if ( score >= 80 ) return '#22c55e';
-        if ( score >= 60 ) return '#f59e0b';
-        return '#ef4444';
+    function scoreClass( score ) {
+        if ( score >= 80 ) return 'wsoa-score--ok';
+        if ( score >= 60 ) return 'wsoa-score--warn';
+        return 'wsoa-score--err';
     }
 
-    /** Construit le HTML du résultat d'analyse. */
+    /** Construit le contenu interne de #wsoa-result-<id> — même structure que le rendu PHP. */
     function buildResultHtml( analysis ) {
         var score = parseInt( analysis.score, 10 ) || 0;
-        var color = scoreColor( score );
-        var html  = '<div class="wsoa-result">';
+        var html  = '';
 
-        html += '<div class="wsoa-result__score" style="color:' + color + '">';
-        html += escHtml( score ) + '<span>/100</span></div>';
+        html += '<div class="wsoa-score ' + scoreClass( score ) + '">';
+        html += '<span class="wsoa-score__value">' + escHtml( score ) + '</span>';
+        html += '<span class="wsoa-score__max">/100</span></div>';
 
-        html += '<div class="wsoa-result__verdict">' + escHtml( analysis.verdict || '' ) + '</div>';
+        if ( analysis.verdict ) {
+            html += '<p class="wsoa-verdict">' + escHtml( analysis.verdict ) + '</p>';
+        }
 
         if ( analysis.analysis ) {
-            html += '<p class="wsoa-result__text">' + escHtml( analysis.analysis ) + '</p>';
+            html += '<p class="wsoa-analysis">' + escHtml( analysis.analysis ) + '</p>';
         }
 
         if ( analysis.strengths && analysis.strengths.length ) {
-            html += '<div class="wsoa-result__section wsoa-result__section--ok">';
-            html += '<strong>✅ ' + escHtml( t( 'Atouts' ) ) + '</strong><ul>';
+            html += '<div class="wsoa-section wsoa-section--ok"><strong>' + escHtml( t( 'Atouts' ) ) + '</strong><ul>';
             analysis.strengths.forEach( function ( s ) {
                 html += '<li>' + escHtml( s ) + '</li>';
             } );
@@ -68,8 +67,7 @@
         }
 
         if ( analysis.issues && analysis.issues.length ) {
-            html += '<div class="wsoa-result__section wsoa-result__section--err">';
-            html += '<strong>❌ ' + escHtml( t( 'Problèmes' ) ) + '</strong><ul>';
+            html += '<div class="wsoa-section wsoa-section--err"><strong>' + escHtml( t( 'Problèmes' ) ) + '</strong><ul>';
             analysis.issues.forEach( function ( issue ) {
                 var icon = issue.severity === 'critical' ? '🚨' : '⚠️';
                 html += '<li>' + icon + ' ' + escHtml( issue.message || '' ) + '</li>';
@@ -78,15 +76,13 @@
         }
 
         if ( analysis.recommendations && analysis.recommendations.length ) {
-            html += '<div class="wsoa-result__section wsoa-result__section--tip">';
-            html += '<strong>💡 ' + escHtml( t( 'Recommandations' ) ) + '</strong><ul>';
+            html += '<div class="wsoa-section wsoa-section--tip"><strong>' + escHtml( t( 'Recommandations' ) ) + '</strong><ul>';
             analysis.recommendations.forEach( function ( r ) {
                 html += '<li>' + escHtml( r ) + '</li>';
             } );
             html += '</ul></div>';
         }
 
-        html += '</div>';
         return html;
     }
 
@@ -122,7 +118,10 @@
                 } )
                 .then( function ( res ) {
                     if ( res.success ) {
-                        if ( resultEl ) resultEl.innerHTML = buildResultHtml( res.data );
+                        if ( resultEl ) {
+                            resultEl.classList.remove( 'wsoa-result--empty' );
+                            resultEl.innerHTML = buildResultHtml( res.data );
+                        }
                         btn.textContent = t( 'reanalyze' );
                     } else {
                         var msg = ( res.data && res.data.message ) ? res.data.message : t( 'error' );

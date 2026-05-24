@@ -7,18 +7,15 @@ $last_title    = get_post_meta( $post->ID, '_wsoa_last_analyzed_title', true );
 ?>
 <div id="wsoa-metabox-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-metabox">
 
-    <?php if ( $last_analysis && is_array( $last_analysis ) ) : ?>
-    <div id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-result">
-        <?php if ( $last_title ) : ?>
-        <p class="wsoa-analyzed-title">
-            <?php printf( esc_html__( 'Analysé : « %s »', 'ws-optimizer-ai' ), esc_html( $last_title ) ); ?>
-        </p>
-        <?php endif; ?>
-
-        <?php
+    <?php if ( $last_analysis && is_array( $last_analysis ) ) :
         $score       = absint( $last_analysis['score'] ?? 0 );
         $score_class = $score >= 80 ? 'wsoa-score--ok' : ( $score >= 60 ? 'wsoa-score--warn' : 'wsoa-score--err' );
-        ?>
+    ?>
+    <div id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-result">
+        <?php if ( $last_title ) : ?>
+        <p class="wsoa-analyzed-title"><?php printf( esc_html__( 'Analysé : « %s »', 'ws-optimizer-ai' ), esc_html( $last_title ) ); ?></p>
+        <?php endif; ?>
+
         <div class="wsoa-score <?php echo esc_attr( $score_class ); ?>">
             <span class="wsoa-score__value"><?php echo esc_html( $score ); ?></span>
             <span class="wsoa-score__max">/100</span>
@@ -65,10 +62,12 @@ $last_title    = get_post_meta( $post->ID, '_wsoa_last_analyzed_title', true );
     <div id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-result wsoa-result--empty"></div>
     <?php endif; ?>
 
-    <button type="button" class="wsoa-btn wsoa-btn-analyze" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
-        <?php echo $last_analysis
-            ? esc_html__( 'Ré-analyser', 'ws-optimizer-ai' )
-            : esc_html__( 'Analyser le titre', 'ws-optimizer-ai' ); ?>
-    </button>
-    <span class="wsoa-spinner" style="display:none;"></span>
+    <div class="wsoa-actions">
+        <button type="button" class="wsoa-btn-analyze" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+            <?php echo $last_analysis
+                ? esc_html__( 'Ré-analyser', 'ws-optimizer-ai' )
+                : esc_html__( 'Analyser le titre', 'ws-optimizer-ai' ); ?>
+        </button>
+        <span class="wsoa-spinner" style="display:none;"></span>
+    </div>
 </div>

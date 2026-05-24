@@ -7,6 +7,8 @@ class WS_Optimizer_AI_Admin {
     private $plugin_name;
     private $version;
 
+    const SCREEN_ID = 'settings_page_ws-optimizer-ai';
+
     public function __construct( $plugin_name, $version ) {
         $this->plugin_name = $plugin_name;
         $this->version     = $version;
@@ -23,7 +25,7 @@ class WS_Optimizer_AI_Admin {
         }
 
         $is_post_screen = in_array( $screen->base, [ 'post', 'edit' ], true );
-        $is_settings    = ( $screen->id === 'settings_page_ws-optimizer-ai' );
+        $is_settings    = ( $screen->id === self::SCREEN_ID );
 
         if ( $is_post_screen || $is_settings ) {
             wp_enqueue_style(
@@ -72,12 +74,12 @@ class WS_Optimizer_AI_Admin {
     }
 
     // -------------------------------------------------------------------------
-    // White frame fix (Avada & third-party themes)
+    // White frame fix + logo lock (Avada & third-party themes)
     // -------------------------------------------------------------------------
 
     public function add_admin_body_class( $classes ) {
         $screen = get_current_screen();
-        if ( $screen && $screen->id === 'settings_page_ws-optimizer-ai' ) {
+        if ( $screen && $screen->id === self::SCREEN_ID ) {
             $classes .= ' wsoa-settings-page';
         }
         return $classes;
@@ -85,21 +87,24 @@ class WS_Optimizer_AI_Admin {
 
     public function inline_reset_css() {
         $screen = get_current_screen();
-        if ( ! $screen || $screen->id !== 'settings_page_ws-optimizer-ai' ) {
+        if ( ! $screen || $screen->id !== self::SCREEN_ID ) {
             return;
         }
-        echo '<style>
+        echo '<style id="wsoa-reset">
+        /* White-frame fix — background only, never touch #wpcontent margin */
         .wsoa-settings-page #wpwrap,
         .wsoa-settings-page #wpcontent,
         .wsoa-settings-page #wpbody,
-        .wsoa-settings-page #wpbody-content { background: #14121C !important; }
+        .wsoa-settings-page #wpbody-content { background:#14121C !important; }
         .wsoa-settings-page #wpbody,
-        .wsoa-settings-page #wpbody-content { padding: 0 !important; }
+        .wsoa-settings-page #wpbody-content { padding:0 !important; }
         .wsoa-settings-page .wrap,
-        .wsoa-settings-page #wpcontent .wrap { margin: 0 !important; padding: 0 !important; background: #14121C !important; max-width: none !important; }
-        /* Lock SVG logo dimensions — prevents Avada global svg{max-width:100%} */
-        .ws-admin-wrap .ws-title-logo,
-        .ws-admin-wrap svg.ws-title-logo { width:36px !important; height:36px !important; min-width:36px !important; }
+        .wsoa-settings-page #wpcontent .wrap { margin:0 !important; padding:0 !important; background:#14121C !important; max-width:none !important; }
+        .wsoa-settings-page #wpfooter { background:#14121C !important; }
+        /* Lock SVG logo dimensions — beats Avada global svg{max-width:100%} */
+        .ws-admin-wrap .ws-logo-mark { width:26px !important; height:auto !important; flex-shrink:0 !important; }
+        .ws-admin-wrap .ws-title-logo { width:34px !important; height:34px !important; min-width:34px !important; flex-shrink:0 !important; }
+        .ws-admin-wrap svg { max-width:none !important; }
         </style>';
     }
 
@@ -166,12 +171,22 @@ class WS_Optimizer_AI_Admin {
         wp_send_json_success( $result['data'] );
     }
 
+    public function ajax_clear_log() {
+        check_ajax_referer( 'wsoa_clear_log', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized' ] );
+            return;
+        }
+        delete_option( 'wsoa_debug_log' );
+        wp_send_json_success();
+    }
+
     // -------------------------------------------------------------------------
-    // Settings
+    // Settings page (HTML pur — formulaires via admin-post.php)
     // -------------------------------------------------------------------------
 
     public function add_settings_page() {
-        // Single page — tabs handled via ?tab= parameter in render_settings_page()
+        // Single page — onglets gérés via le paramètre ?tab= dans render_settings_page().
         add_submenu_page(
             'options-general.php',
             __( 'WS SEO Title AI', 'ws-optimizer-ai' ),
@@ -191,51 +206,44 @@ class WS_Optimizer_AI_Admin {
         }
     }
 
-    public function register_settings() {
-        register_setting(
-            'wsoa_settings_group',
-            'wsoa_settings',
-            [ $this, 'sanitize_settings' ]
-        );
-
-        register_setting(
-            'wsoa_logs_settings_group',
-            'wsoa_capture_logs',
-            [ 'sanitize_callback' => 'rest_sanitize_boolean' ]
-        );
-
-        add_settings_section(
-            'wsoa_general',
-            __( 'Configuration générale', 'ws-optimizer-ai' ),
-            null,
-            'ws-optimizer-ai'
-        );
-
-        add_settings_field(
-            'wsoa_post_types',
-            __( 'Types de publication', 'ws-optimizer-ai' ),
-            [ $this, 'render_post_types_field' ],
-            'ws-optimizer-ai',
-            'wsoa_general'
-        );
-
-    }
-
-    public function render_post_types_field() {
-        $settings   = get_option( 'wsoa_settings', [] );
-        $selected   = $settings['post_types'] ?? [ 'post', 'page' ];
-        $post_types = get_post_types( [ 'public' => true ], 'objects' );
-
-        foreach ( $post_types as $pt ) {
-            printf(
-                '<label style="display:block;margin-bottom:6px;"><input type="checkbox" name="wsoa_settings[post_types][]" value="%s" %s> %s</label>',
-                esc_attr( $pt->name ),
-                checked( in_array( $pt->name, $selected, true ), true, false ),
-                esc_html( $pt->labels->singular_name )
-            );
+    public function handle_save_settings() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Accès refusé.', 'ws-optimizer-ai' ) );
         }
+        check_admin_referer( 'wsoa_save_settings' );
+
+        $existing = get_option( 'wsoa_settings', [] );
+        $input    = [
+            'post_types' => ( isset( $_POST['wsoa_post_types'] ) && is_array( $_POST['wsoa_post_types'] ) )
+                ? array_map( 'sanitize_key', wp_unslash( $_POST['wsoa_post_types'] ) )
+                : [],
+            'model'      => $existing['model']      ?? WS_Optimizer_AI_Analyzer::DEFAULT_MODEL,
+            'max_tokens' => $existing['max_tokens'] ?? WS_Optimizer_AI_Analyzer::DEFAULT_MAX_TOKENS,
+        ];
+
+        update_option( 'wsoa_settings', $this->sanitize_settings( $input ) );
+
+        wp_safe_redirect( add_query_arg(
+            [ 'page' => 'ws-optimizer-ai', 'saved' => '1' ],
+            admin_url( 'options-general.php' )
+        ) );
+        exit;
     }
 
+    public function handle_save_logs_settings() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Accès refusé.', 'ws-optimizer-ai' ) );
+        }
+        check_admin_referer( 'wsoa_save_logs_settings' );
+
+        update_option( 'wsoa_capture_logs', ! empty( $_POST['wsoa_capture_logs'] ) );
+
+        wp_safe_redirect( add_query_arg(
+            [ 'page' => 'ws-optimizer-ai', 'tab' => 'logs', 'saved' => '1' ],
+            admin_url( 'options-general.php' )
+        ) );
+        exit;
+    }
 
     public function sanitize_settings( $input ) {
         $sanitized = [];
@@ -253,19 +261,6 @@ class WS_Optimizer_AI_Admin {
         $sanitized['max_tokens'] = isset( $input['max_tokens'] ) ? absint( $input['max_tokens'] ) : WS_Optimizer_AI_Analyzer::DEFAULT_MAX_TOKENS;
 
         return $sanitized;
-    }
-
-    // ── Helpers
-    // -------------------------------------------------------------------------
-
-    public function ajax_clear_log() {
-        check_ajax_referer( 'wsoa_clear_log', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( [ 'message' => 'Unauthorized' ] );
-            return;
-        }
-        delete_option( 'wsoa_debug_log' );
-        wp_send_json_success();
     }
 
     // -------------------------------------------------------------------------

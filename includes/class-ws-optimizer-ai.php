@@ -39,7 +39,6 @@ class WS_Optimizer_AI {
         $this->loader->add_action( 'admin_post_wsoa_save_settings',     $admin, 'handle_save_settings' );
         $this->loader->add_action( 'admin_post_wsoa_save_logs_settings', $admin, 'handle_save_logs_settings' );
         $this->loader->add_action( 'admin_menu',            $admin, 'add_settings_page' );
-        $this->loader->add_action( 'admin_init',            $admin, 'register_settings' );
         $this->loader->add_filter( 'admin_body_class',      $admin, 'add_admin_body_class' );
         $this->loader->add_action( 'admin_head',            $admin, 'inline_reset_css' );
     }

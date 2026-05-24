@@ -17,6 +17,61 @@ LOCALES = {
 }
 
 TRANSLATIONS = {
+    "%d entrée(s)": {
+        "de_DE": "%d Eintrag(e)",
+        "en_US": "%d entry(ies)",
+        "es_ES": "%d entrada(s)",
+    },
+    "AI Logs": {
+        "de_DE": "KI-Logs",
+        "en_US": "AI Logs",
+        "es_ES": "Registros de IA",
+    },
+    "Aucune entrée. Activez la capture puis lancez une analyse depuis un article.": {
+        "de_DE": "Keine Einträge. Aktivieren Sie die Erfassung und starten Sie dann eine Analyse in einem Beitrag.",
+        "en_US": "No entries. Enable capture, then run an analysis from a post.",
+        "es_ES": "Sin entradas. Activa la captura y luego ejecuta un análisis desde una entrada.",
+    },
+    "Capturer les logs IA": {
+        "de_DE": "KI-Logs erfassen",
+        "en_US": "Capture AI logs",
+        "es_ES": "Capturar registros de IA",
+    },
+    "Documentation": {
+        "de_DE": "Dokumentation",
+        "en_US": "Documentation",
+        "es_ES": "Documentación",
+    },
+    "Enregistrer": {
+        "de_DE": "Speichern",
+        "en_US": "Save",
+        "es_ES": "Guardar",
+    },
+    "Réglage enregistré.": {
+        "de_DE": "Einstellung gespeichert.",
+        "en_US": "Setting saved.",
+        "es_ES": "Ajuste guardado.",
+    },
+    "Réglages": {
+        "de_DE": "Einstellungen",
+        "en_US": "Settings",
+        "es_ES": "Ajustes",
+    },
+    "Réglages sauvegardés.": {
+        "de_DE": "Einstellungen gespeichert.",
+        "en_US": "Settings saved.",
+        "es_ES": "Ajustes guardados.",
+    },
+    "Sauvegarder les réglages": {
+        "de_DE": "Einstellungen speichern",
+        "en_US": "Save settings",
+        "es_ES": "Guardar ajustes",
+    },
+    "Vider les logs": {
+        "de_DE": "Logs leeren",
+        "en_US": "Clear logs",
+        "es_ES": "Vaciar registros",
+    },
     "Analyse Titre (Claude)": {
         "de_DE": "Titel-Analyse (Claude)",
         "en_US": "Title Analysis (Claude)",
