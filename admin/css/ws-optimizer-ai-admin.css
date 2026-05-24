@@ -303,7 +303,8 @@
     line-height: 1.6;
     color: #C4BFDA;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
+    overflow-wrap: break-word;
     font-family: monospace;
     max-height: 300px;
     overflow-y: auto;
