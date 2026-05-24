@@ -109,7 +109,7 @@ $wsoa_models = [
             <p class="ws-card-desc"><?php esc_html_e( 'Ce plugin nécessite WordPress avec le module AI Client activé et un compte Anthropic configuré (Claude).', 'ws-optimizer-ai' ); ?></p>
           </div>
         </div>
-        <a href="https://wordpress-freelance.com/plugins/ws-optimizer-ai/" target="_blank" rel="noopener" class="ws-link-btn">
+        <a href="https://plugin.wordpress-freelance.com/plugin/ws-optimizer-ai/" target="_blank" rel="noopener" class="ws-link-btn">
           <?php esc_html_e( 'Documentation', 'ws-optimizer-ai' ); ?>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </a>

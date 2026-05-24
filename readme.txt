@@ -4,7 +4,7 @@ Tags: seo, ai, title, claude, artificial-intelligence
 Requires at least: 6.7
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Yes. If a focus keyword is set in either plugin, it is passed to Claude as part 
 3. Settings page — post types and Claude model selection.
 
 == Changelog ==
+
+= 2.2.1 =
+* Lien Documentation pointant vers le Hub (plugin.wordpress-freelance.com).
 
 = 2.2.0 =
 * Choix du moteur IA (Claude, OpenAI/GPT, Google Gemini) via un sélecteur dans les réglages, ou mode Automatique laissant WordPress décider selon les fournisseurs configurés.
