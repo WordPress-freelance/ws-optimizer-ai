@@ -20,7 +20,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          tools: phpunit
+          tools: phpunit:9
       - name: Install test dependencies (git clone, no Composer)
         run: |
           mkdir -p vendor/10up vendor/mockery vendor/antecedent vendor/hamcrest
@@ -55,7 +55,7 @@ jobs:
         with:
           php-version: '8.1'
           extensions: mysqli
-          tools: phpunit, wp-cli
+          tools: phpunit:9, wp-cli
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y subversion default-mysql-client
       - name: Install WP test suite
