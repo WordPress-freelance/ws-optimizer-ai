@@ -34,6 +34,9 @@ msgstr "Stärken"
 msgid "Aucune entrée. Activez la capture puis lancez une analyse depuis un article."
 msgstr "Keine Einträge. Aktivieren Sie die Erfassung und starten Sie dann eine Analyse in einem Beitrag."
 
+msgid "Automatique (réglage WordPress)"
+msgstr "Automatisch (WordPress-Einstellung)"
+
 msgid "Capturer les logs IA"
 msgstr "KI-Logs erfassen"
 
@@ -48,6 +51,9 @@ msgstr "Speichern"
 
 msgid "Le titre est vide."
 msgstr "Der Titel ist leer."
+
+msgid "Moteur IA"
+msgstr "KI-Engine"
 
 msgid "Non définie"
 msgstr "Nicht definiert"
@@ -76,8 +82,8 @@ msgstr "Einstellungen"
 msgid "Réglages sauvegardés."
 msgstr "Einstellungen gespeichert."
 
-msgid "Réponse Claude invalide."
-msgstr "Ungültige Claude-Antwort."
+msgid "Réponse IA invalide."
+msgstr "Ungültige KI-Antwort."
 
 msgid "Sauvegarder les réglages"
 msgstr "Einstellungen speichern"

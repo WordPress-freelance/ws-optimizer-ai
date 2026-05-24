@@ -5,7 +5,26 @@ if ( ! current_user_can( 'manage_options' ) ) {
 }
 $settings   = get_option( 'wsoa_settings', [] );
 $post_types = $settings['post_types'] ?? [ 'post', 'page' ];
+$model      = $settings['model'] ?? WS_Optimizer_AI_Analyzer::DEFAULT_MODEL;
 $all_types  = get_post_types( [ 'public' => true ], 'objects' );
+
+// Modèles proposés, groupés par fournisseur. La liste est indicative :
+// l'AI Client retombe en sélection auto si l'ID choisi n'est pas disponible
+// chez le provider configuré. '' = Auto (laisse WordPress décider).
+$wsoa_models = [
+    'Anthropic (Claude)' => [
+        'claude-opus-4-6'   => 'Claude Opus 4.6',
+        'claude-sonnet-4-6' => 'Claude Sonnet 4.6',
+    ],
+    'OpenAI (GPT)' => [
+        'gpt-5.3' => 'GPT-5.3',
+        'gpt-5'   => 'GPT-5',
+    ],
+    'Google (Gemini)' => [
+        'gemini-2.5-pro'   => 'Gemini 2.5 Pro',
+        'gemini-2.5-flash' => 'Gemini 2.5 Flash',
+    ],
+];
 ?>
 <div class="wrap ws-admin-wrap">
   <?php include __DIR__ . '/ws-optimizer-ai-admin-header.php'; ?>
@@ -56,6 +75,28 @@ $all_types  = get_post_types( [ 'public' => true ], 'objects' );
           </label>
           <?php endforeach; ?>
         </div>
+      </section>
+
+      <section class="ws-card">
+        <div class="ws-card-head">
+          <span class="ws-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          </span>
+          <div>
+            <h2 class="ws-card-title"><?php esc_html_e( 'Moteur IA', 'ws-optimizer-ai' ); ?></h2>
+            <p class="ws-card-desc"><?php esc_html_e( 'Modèle préféré pour l\'analyse. Laissez sur Automatique pour utiliser le fournisseur configuré dans WordPress.', 'ws-optimizer-ai' ); ?></p>
+          </div>
+        </div>
+        <select name="wsoa_model" class="ws-select">
+          <option value="" <?php selected( '', $model ); ?>><?php esc_html_e( 'Automatique (réglage WordPress)', 'ws-optimizer-ai' ); ?></option>
+          <?php foreach ( $wsoa_models as $group => $choices ) : ?>
+          <optgroup label="<?php echo esc_attr( $group ); ?>">
+            <?php foreach ( $choices as $id => $label ) : ?>
+            <option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $model ); ?>><?php echo esc_html( $label ); ?></option>
+            <?php endforeach; ?>
+          </optgroup>
+          <?php endforeach; ?>
+        </select>
       </section>
 
       <section class="ws-card ws-card--dk">

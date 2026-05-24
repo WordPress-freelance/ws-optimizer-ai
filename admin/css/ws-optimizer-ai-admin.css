@@ -79,6 +79,26 @@
 .ws-pill input { position:absolute; opacity:0; width:0; height:0; }
 .ws-pill:has(input:checked) { background:var(--ws-accent); border-color:var(--ws-accent); color:#fff; font-weight:500; }
 
+/* ── Select (moteur IA) ────────────────────────────────────────────────── */
+.ws-admin-wrap .ws-select {
+  appearance:none; -webkit-appearance:none;
+  width:100%; max-width:360px;
+  background:#1A1724 !important;
+  color:#F0EDE8 !important;
+  border:1px solid #2E2B38 !important;
+  border-radius:8px !important;
+  box-shadow:none !important;
+  padding:10px 38px 10px 14px;
+  font-size:13.5px; line-height:1.4; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A899D4' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat:no-repeat !important;
+  background-position:right 13px center !important;
+  transition:border-color .15s ease;
+}
+.ws-admin-wrap .ws-select:focus { border-color:#7C5CBF !important; outline:none !important; box-shadow:none !important; }
+.ws-admin-wrap .ws-select optgroup { color:#9B8EC4; background:#14121C; font-style:normal; }
+.ws-admin-wrap .ws-select option { color:#F0EDE8; background:#14121C; }
+
 /* ── Toggle switch (capture logs) ──────────────────────────────────────── */
 .ws-capture-form { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
 .ws-switch { display:inline-flex; align-items:center; gap:11px; cursor:pointer; user-select:none; }

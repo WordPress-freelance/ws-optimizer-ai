@@ -85,6 +85,16 @@ class SettingsRoundTripTest extends WebStrategyTestCase {
                 return $out;
             },
         ] );
+        // Idem pour selected() (sélecteur de modèle).
+        WP_Mock::userFunction( 'selected', [
+            'return' => function ( $selected, $current = true, $echo = true ) {
+                $out = ( (string) $selected === (string) $current ) ? " selected='selected'" : '';
+                if ( $echo ) {
+                    echo $out;
+                }
+                return $out;
+            },
+        ] );
     }
 
     private function render( $partial ) {
@@ -231,5 +241,88 @@ class SettingsRoundTripTest extends WebStrategyTestCase {
         $html = $this->render( 'ws-optimizer-ai-admin-logs.php' );
 
         $this->assertCheckbox( $html, '1', false, 'Le toggle de capture doit rester OFF après refresh' );
+    }
+
+    /** Assert qu'une <option> identifiée par sa value est sélectionnée (ou non). */
+    private function assertOption( $html, $value, $expected, $msg = '' ) {
+        $needle = 'value="' . $value . '"';
+        $pos    = strpos( $html, $needle );
+        $this->assertNotFalse( $pos, "Option value=\"$value\" introuvable dans le rendu" );
+
+        $end     = strpos( $html, '>', $pos );
+        $segment = substr( $html, $pos, $end - $pos );
+
+        if ( $expected ) {
+            $this->assertStringContainsString( 'selected', $segment, $msg ?: "value=\"$value\" devrait être sélectionnée après refresh" );
+        } else {
+            $this->assertStringNotContainsString( 'selected', $segment, $msg ?: "value=\"$value\" ne devrait pas être sélectionnée après refresh" );
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Réglages — moteur IA (sélecteur de modèle)
+    // -------------------------------------------------------------------------
+
+    public function test_settings_model_round_trip() {
+        $admin = new WS_Optimizer_AI_Admin( 'ws-optimizer-ai', '2.2.0' );
+
+        $this->bind_options_store( [ 'wsoa_settings' => [] ] );
+        WP_Mock::userFunction( 'current_user_can', [ 'return' => true ] );
+        WP_Mock::userFunction( 'check_admin_referer', [ 'return' => true ] );
+        WP_Mock::userFunction( 'wp_unslash', [ 'return' => function ( $v ) { return $v; } ] );
+        WP_Mock::userFunction( 'sanitize_text_field', [ 'return' => function ( $v ) { return trim( $v ); } ] );
+        $this->halt_on_redirect();
+
+        // SAISIE : l'utilisateur choisit un modèle OpenAI.
+        $_POST['wsoa_post_types'] = [ 'post' ];
+        $_POST['wsoa_model']      = 'gpt-5.3';
+        try {
+            $admin->handle_save_settings();
+        } catch ( WSOA_RedirectHalt $e ) {
+        }
+
+        $this->assertSame( 'gpt-5.3', $this->store['wsoa_settings']['model'] );
+
+        // REFRESH : l'option GPT est pré-sélectionnée, les autres non.
+        $_GET = [];
+        $this->bind_render_commons();
+        WP_Mock::userFunction( 'get_post_types', [ 'return' => $this->fake_public_post_types() ] );
+
+        $html = $this->render( 'ws-optimizer-ai-admin-settings.php' );
+
+        $this->assertOption( $html, 'gpt-5.3', true );
+        $this->assertOption( $html, 'claude-opus-4-6', false );
+        $this->assertOption( $html, '', false, 'L\'option Auto ne doit pas être sélectionnée' );
+    }
+
+    public function test_settings_model_auto_round_trip() {
+        $admin = new WS_Optimizer_AI_Admin( 'ws-optimizer-ai', '2.2.0' );
+
+        $this->bind_options_store( [ 'wsoa_settings' => [ 'model' => 'claude-opus-4-6' ] ] );
+        WP_Mock::userFunction( 'current_user_can', [ 'return' => true ] );
+        WP_Mock::userFunction( 'check_admin_referer', [ 'return' => true ] );
+        WP_Mock::userFunction( 'wp_unslash', [ 'return' => function ( $v ) { return $v; } ] );
+        WP_Mock::userFunction( 'sanitize_text_field', [ 'return' => function ( $v ) { return trim( $v ); } ] );
+        $this->halt_on_redirect();
+
+        // SAISIE : retour sur Automatique (value vide).
+        $_POST['wsoa_post_types'] = [ 'post' ];
+        $_POST['wsoa_model']      = '';
+        try {
+            $admin->handle_save_settings();
+        } catch ( WSOA_RedirectHalt $e ) {
+        }
+
+        $this->assertSame( '', $this->store['wsoa_settings']['model'] );
+
+        // REFRESH : l'option Auto est sélectionnée, pas le modèle Claude précédent.
+        $_GET = [];
+        $this->bind_render_commons();
+        WP_Mock::userFunction( 'get_post_types', [ 'return' => $this->fake_public_post_types() ] );
+
+        $html = $this->render( 'ws-optimizer-ai-admin-settings.php' );
+
+        $this->assertOption( $html, '', true, 'L\'option Auto doit être sélectionnée après refresh' );
+        $this->assertOption( $html, 'claude-opus-4-6', false );
     }
 }

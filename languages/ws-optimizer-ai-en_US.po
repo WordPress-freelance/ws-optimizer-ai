@@ -34,6 +34,9 @@ msgstr "Strengths"
 msgid "Aucune entrée. Activez la capture puis lancez une analyse depuis un article."
 msgstr "No entries. Enable capture, then run an analysis from a post."
 
+msgid "Automatique (réglage WordPress)"
+msgstr "Automatic (WordPress setting)"
+
 msgid "Capturer les logs IA"
 msgstr "Capture AI logs"
 
@@ -48,6 +51,9 @@ msgstr "Save"
 
 msgid "Le titre est vide."
 msgstr "Title is empty."
+
+msgid "Moteur IA"
+msgstr "AI engine"
 
 msgid "Non définie"
 msgstr "Not defined"
@@ -76,8 +82,8 @@ msgstr "Settings"
 msgid "Réglages sauvegardés."
 msgstr "Settings saved."
 
-msgid "Réponse Claude invalide."
-msgstr "Invalid Claude response."
+msgid "Réponse IA invalide."
+msgstr "Invalid AI response."
 
 msgid "Sauvegarder les réglages"
 msgstr "Save settings"

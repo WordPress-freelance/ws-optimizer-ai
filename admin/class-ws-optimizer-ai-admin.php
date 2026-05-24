@@ -217,7 +217,9 @@ class WS_Optimizer_AI_Admin {
             'post_types' => ( isset( $_POST['wsoa_post_types'] ) && is_array( $_POST['wsoa_post_types'] ) )
                 ? array_map( 'sanitize_key', wp_unslash( $_POST['wsoa_post_types'] ) )
                 : [],
-            'model'      => $existing['model']      ?? WS_Optimizer_AI_Analyzer::DEFAULT_MODEL,
+            'model'      => isset( $_POST['wsoa_model'] )
+                ? sanitize_text_field( wp_unslash( $_POST['wsoa_model'] ) )
+                : ( $existing['model'] ?? WS_Optimizer_AI_Analyzer::DEFAULT_MODEL ),
             'max_tokens' => $existing['max_tokens'] ?? WS_Optimizer_AI_Analyzer::DEFAULT_MAX_TOKENS,
         ];
 
@@ -254,10 +256,21 @@ class WS_Optimizer_AI_Admin {
             $sanitized['post_types'] = [ 'post', 'page' ];
         }
 
-        $allowed_models          = [ 'claude-opus-4-6', 'claude-sonnet-4-6' ];
-        $sanitized['model']      = in_array( $input['model'] ?? '', $allowed_models, true )
-            ? $input['model']
-            : WS_Optimizer_AI_Analyzer::DEFAULT_MODEL;
+        // Modèle : accepte tout ID bien formé (Claude, OpenAI/GPT, Gemini, …).
+        // '' = Auto (l'AI Client choisit selon les providers configurés).
+        // Clé absente = défaut historique. ID malformé = repli sur le défaut.
+        if ( ! array_key_exists( 'model', $input ) ) {
+            $sanitized['model'] = WS_Optimizer_AI_Analyzer::DEFAULT_MODEL;
+        } else {
+            $model = strtolower( trim( (string) $input['model'] ) );
+            if ( '' === $model ) {
+                $sanitized['model'] = '';
+            } elseif ( preg_match( '/^[a-z0-9.\-]+$/', $model ) ) {
+                $sanitized['model'] = $model;
+            } else {
+                $sanitized['model'] = WS_Optimizer_AI_Analyzer::DEFAULT_MODEL;
+            }
+        }
         $sanitized['max_tokens'] = isset( $input['max_tokens'] ) ? absint( $input['max_tokens'] ) : WS_Optimizer_AI_Analyzer::DEFAULT_MAX_TOKENS;
 
         return $sanitized;

@@ -133,7 +133,7 @@ class WS_Optimizer_AI_Analyzer {
 
         $data = json_decode( $text, true );
         if ( ! $data ) {
-            return [ 'error' => __( 'Réponse Claude invalide.', 'ws-optimizer-ai' ), 'raw' => $text ];
+            return [ 'error' => __( 'Réponse IA invalide.', 'ws-optimizer-ai' ), 'raw' => $text ];
         }
 
         return [ 'success' => true, 'data' => $data ];
@@ -153,6 +153,13 @@ class WS_Optimizer_AI_Analyzer {
                 'type'  => gettype( $builder ),
                 'class' => is_object( $builder ) ? get_class( $builder ) : null,
             ] );
+
+            // Préférence de modèle/fournisseur (Claude, OpenAI, Gemini, …).
+            // Vide = on laisse l'AI Client choisir selon les providers configurés.
+            // Le client essaie ce modèle puis retombe en sélection auto s'il est indisponible.
+            if ( '' !== (string) $this->model ) {
+                $builder = $builder->using_model_preference( $this->model );
+            }
 
             // Trigger the actual API call
             $result = $builder->generate_text();
@@ -181,7 +188,7 @@ class WS_Optimizer_AI_Analyzer {
                 'line'    => $e->getLine(),
             ] );
             return [
-                'error' => sprintf( __( 'Erreur lors de l\'appel à Claude : %s', 'ws-optimizer-ai' ), $e->getMessage() ),
+                'error' => sprintf( __( 'Erreur lors de l\'appel à l\'IA : %s', 'ws-optimizer-ai' ), $e->getMessage() ),
             ];
         }
     }

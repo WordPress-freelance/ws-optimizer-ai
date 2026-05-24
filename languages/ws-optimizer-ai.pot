@@ -32,6 +32,9 @@ msgstr ""
 msgid "Aucune entrée. Activez la capture puis lancez une analyse depuis un article."
 msgstr ""
 
+msgid "Automatique (réglage WordPress)"
+msgstr ""
+
 msgid "Capturer les logs IA"
 msgstr ""
 
@@ -45,6 +48,9 @@ msgid "Enregistrer"
 msgstr ""
 
 msgid "Le titre est vide."
+msgstr ""
+
+msgid "Moteur IA"
 msgstr ""
 
 msgid "Non définie"
@@ -74,7 +80,7 @@ msgstr ""
 msgid "Réglages sauvegardés."
 msgstr ""
 
-msgid "Réponse Claude invalide."
+msgid "Réponse IA invalide."
 msgstr ""
 
 msgid "Sauvegarder les réglages"

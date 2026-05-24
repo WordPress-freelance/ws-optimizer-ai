@@ -84,14 +84,34 @@ class AdminTest extends WebStrategyTestCase {
         $this->assertEquals( [ 'post', 'page' ], $result['post_types'] );
     }
 
-    public function test_sanitize_settings_rejects_invalid_model() {
-        $result = $this->admin->sanitize_settings( [ 'model' => 'gpt-99-turbo' ] );
+    public function test_sanitize_settings_rejects_malformed_model() {
+        $result = $this->admin->sanitize_settings( [ 'model' => 'GPT 99 Turbo!!' ] );
         $this->assertEquals( \WS_Optimizer_AI_Analyzer::DEFAULT_MODEL, $result['model'] );
     }
 
     public function test_sanitize_settings_accepts_sonnet_model() {
         $result = $this->admin->sanitize_settings( [ 'model' => 'claude-sonnet-4-6', 'post_types' => [ 'post' ] ] );
         $this->assertEquals( 'claude-sonnet-4-6', $result['model'] );
+    }
+
+    public function test_sanitize_settings_accepts_openai_model() {
+        $result = $this->admin->sanitize_settings( [ 'model' => 'gpt-5.3', 'post_types' => [ 'post' ] ] );
+        $this->assertEquals( 'gpt-5.3', $result['model'] );
+    }
+
+    public function test_sanitize_settings_accepts_gemini_model() {
+        $result = $this->admin->sanitize_settings( [ 'model' => 'gemini-2.5-pro', 'post_types' => [ 'post' ] ] );
+        $this->assertEquals( 'gemini-2.5-pro', $result['model'] );
+    }
+
+    public function test_sanitize_settings_preserves_auto_empty_model() {
+        $result = $this->admin->sanitize_settings( [ 'model' => '', 'post_types' => [ 'post' ] ] );
+        $this->assertSame( '', $result['model'] );
+    }
+
+    public function test_sanitize_settings_defaults_model_when_key_absent() {
+        $result = $this->admin->sanitize_settings( [ 'post_types' => [ 'post' ] ] );
+        $this->assertEquals( \WS_Optimizer_AI_Analyzer::DEFAULT_MODEL, $result['model'] );
     }
 
     public function test_sanitize_settings_sanitizes_post_type_keys() {

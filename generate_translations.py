@@ -17,6 +17,21 @@ LOCALES = {
 }
 
 TRANSLATIONS = {
+    "Automatique (réglage WordPress)": {
+        "de_DE": "Automatisch (WordPress-Einstellung)",
+        "en_US": "Automatic (WordPress setting)",
+        "es_ES": "Automático (ajuste de WordPress)",
+    },
+    "Moteur IA": {
+        "de_DE": "KI-Engine",
+        "en_US": "AI engine",
+        "es_ES": "Motor de IA",
+    },
+    "Réponse IA invalide.": {
+        "de_DE": "Ungültige KI-Antwort.",
+        "en_US": "Invalid AI response.",
+        "es_ES": "Respuesta de IA no válida.",
+    },
     "%d entrée(s)": {
         "de_DE": "%d Eintrag(e)",
         "en_US": "%d entry(ies)",
