@@ -144,20 +144,37 @@ class WS_Optimizer_AI_Analyzer {
      */
     public function call_claude( $prompt ) {
         try {
-            // WordPress AI Client builder pattern:
-            // wp_ai_client_prompt($text) returns a builder — must chain config
-            // methods then call generate_text() to actually fire the request.
-            $builder = wp_ai_client_prompt( $prompt )
-                ->usingModel( $this->model )
-                ->usingMaxTokens( $this->max_tokens );
+            // WordPress AI Client builder pattern — wp_ai_client_prompt($text)
+            // returns WP_AI_Client_Prompt_Builder. Chain via __call then generate_text().
+            $builder = wp_ai_client_prompt( $prompt );
+            $this->log_entry( 'builder_received', [
+                'type'  => gettype( $builder ),
+                'class' => is_object( $builder ) ? get_class( $builder ) : null,
+            ] );
 
-            // Log builder state before generation
+            // Each method may return a different object — capture return values safely.
+            if ( is_object( $builder ) && method_exists( $builder, 'usingModel' ) ) {
+                $b2 = $builder->usingModel( $this->model );
+                $builder = $b2 ?: $builder;
+            }
+            if ( is_object( $builder ) && method_exists( $builder, 'usingMaxTokens' ) ) {
+                $b3 = $builder->usingMaxTokens( $this->max_tokens );
+                $builder = $b3 ?: $builder;
+            }
+
+            // Via __call magic, these snake_case aliases exist on the wrapper
+            if ( ! method_exists( $builder, 'usingModel' ) ) {
+                $b2 = $builder->using_model( $this->model );
+                $builder = $b2 ?: $builder;
+                $b3 = $builder->using_max_tokens( $this->max_tokens );
+                $builder = $b3 ?: $builder;
+            }
+
             $this->log_response( $builder );
 
             // Trigger the actual API call
             $result = $builder->generate_text();
 
-            // Log what generate_text() returns so we can adapt extract_text() if needed
             $this->log_entry( 'generate_text_result', [
                 'type'  => gettype( $result ),
                 'class' => is_object( $result ) ? get_class( $result ) : null,
@@ -165,8 +182,15 @@ class WS_Optimizer_AI_Analyzer {
             ] );
 
             return $this->parse_response( $result );
-        } catch ( \Exception $e ) {
-            $this->log_entry( 'exception', $e->getMessage() );
+
+        } catch ( \Throwable $e ) {
+            // Catch both \Exception and \Error (fatal errors from bad chaining)
+            $this->log_entry( 'exception', [
+                'class'   => get_class( $e ),
+                'message' => $e->getMessage(),
+                'file'    => basename( $e->getFile() ),
+                'line'    => $e->getLine(),
+            ] );
             return [
                 'error' => sprintf( __( 'Erreur lors de l\'appel à Claude : %s', 'ws-optimizer-ai' ), $e->getMessage() ),
             ];
