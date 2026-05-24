@@ -97,6 +97,9 @@ class WS_Optimizer_AI_Admin {
         .wsoa-settings-page #wpbody-content { padding: 0 !important; }
         .wsoa-settings-page .wrap,
         .wsoa-settings-page #wpcontent .wrap { margin: 0 !important; padding: 0 !important; background: #14121C !important; max-width: none !important; }
+        /* Lock SVG logo dimensions — prevents Avada global svg{max-width:100%} */
+        .ws-admin-wrap .ws-title-logo,
+        .ws-admin-wrap svg.ws-title-logo { width:36px !important; height:36px !important; min-width:36px !important; }
         </style>';
     }
 
