@@ -121,3 +121,14 @@ if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
         return [ 'content' => [ [ 'text' => '' ] ] ];
     }
 }
+if ( ! function_exists( 'current_time' ) ) {
+    function current_time( $type, $gmt = 0 ) {
+        return $type === 'timestamp' ? time() : date( 'Y-m-d H:i:s' );
+    }
+}
+if ( ! function_exists( 'delete_option' ) ) {
+    function delete_option( $option ) { return true; }
+}
+if ( ! function_exists( 'get_class_methods' ) ) {
+    // PHP built-in — no stub needed
+}

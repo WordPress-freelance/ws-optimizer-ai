@@ -267,6 +267,19 @@ class WS_Optimizer_AI_Admin {
         return $sanitized;
     }
 
+    // ── Helpers
+    // -------------------------------------------------------------------------
+
+    public function ajax_clear_log() {
+        check_ajax_referer( 'wsoa_clear_log', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized' ] );
+            return;
+        }
+        delete_option( 'wsoa_debug_log' );
+        wp_send_json_success();
+    }
+
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------

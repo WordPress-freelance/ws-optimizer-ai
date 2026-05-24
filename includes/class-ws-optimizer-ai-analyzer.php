@@ -153,12 +153,66 @@ class WS_Optimizer_AI_Analyzer {
                     'max_tokens' => $this->max_tokens,
                 ]
             );
+
+            // Log raw response for debugging
+            $this->log_response( $response );
+
             return $this->parse_response( $response );
         } catch ( \Exception $e ) {
+            $this->log_entry( 'exception', $e->getMessage() );
             return [
                 'error' => sprintf( __( 'Erreur lors de l\'appel à Claude : %s', 'ws-optimizer-ai' ), $e->getMessage() ),
             ];
         }
+    }
+
+    /**
+     * Log the raw response from wp_ai_client_prompt() for debugging.
+     */
+    private function log_response( $response ) {
+        $type    = gettype( $response );
+        $methods = [];
+        $props   = [];
+        $raw     = '';
+
+        if ( is_object( $response ) ) {
+            $methods = get_class_methods( $response );
+            $props   = array_keys( (array) $response );
+            $class   = get_class( $response );
+            $raw     = $class;
+        } elseif ( is_array( $response ) ) {
+            $raw = wp_json_encode( $response );
+        } else {
+            $raw = (string) $response;
+        }
+
+        $text = $this->extract_text( $response );
+
+        $this->log_entry( 'response', [
+            'type'    => $type,
+            'class'   => is_object( $response ) ? get_class( $response ) : null,
+            'methods' => $methods,
+            'props'   => $props,
+            'raw'     => substr( $raw, 0, 500 ),
+            'extracted_text' => substr( $text, 0, 200 ),
+        ] );
+    }
+
+    /**
+     * Append a log entry to the wsoa_debug_log option (last 20 entries).
+     */
+    public static function log_entry( $type, $data ) {
+        $log   = get_option( 'wsoa_debug_log', [] );
+        $log[] = [
+            'time' => current_time( 'mysql' ),
+            'type' => $type,
+            'data' => $data,
+        ];
+        // Keep last 20 entries
+        if ( count( $log ) > 20 ) {
+            $log = array_slice( $log, -20 );
+        }
+        update_option( 'wsoa_debug_log', $log );
     }
 
     // Accessors used by unit tests
