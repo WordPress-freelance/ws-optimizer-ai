@@ -5,12 +5,20 @@ if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( esc_html__( 'Accès refusé.', 'ws-optimizer-ai' ) );
 }
 
-$log  = get_option( 'wsoa_debug_log', [] );
-$log  = array_reverse( $log ); // newest first
+$current_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'settings';
+$base_url    = admin_url( 'options-general.php?page=ws-optimizer-ai' );
 ?>
 <div class="wrap wsoa-wrap">
     <h1><?php esc_html_e( 'WS SEO Title AI', 'ws-optimizer-ai' ); ?></h1>
-    <p class="wsoa-subtitle"><?php esc_html_e( 'Analysez vos titres SEO avec Claude directement dans l\'éditeur.', 'ws-optimizer-ai' ); ?></p>
+
+    <nav class="wsoa-tabs">
+        <a href="<?php echo esc_url( $base_url ); ?>" class="wsoa-tab <?php echo $current_tab === 'settings' ? 'wsoa-tab--active' : ''; ?>">
+            <?php esc_html_e( 'Réglages', 'ws-optimizer-ai' ); ?>
+        </a>
+        <a href="<?php echo esc_url( admin_url( 'options-general.php?page=ws-optimizer-ai-logs' ) ); ?>" class="wsoa-tab">
+            <?php esc_html_e( 'AI Logs', 'ws-optimizer-ai' ); ?>
+        </a>
+    </nav>
 
     <?php settings_errors( 'wsoa_settings_group' ); ?>
 
@@ -31,55 +39,4 @@ $log  = array_reverse( $log ); // newest first
             </a>
         </p>
     </div>
-
-    <div class="wsoa-debug-section">
-        <div class="wsoa-debug-header">
-            <h2><?php esc_html_e( 'Debug log', 'ws-optimizer-ai' ); ?></h2>
-            <?php if ( ! empty( $log ) ) : ?>
-            <button type="button" id="wsoa-clear-log" class="wsoa-btn wsoa-btn--small">
-                <?php esc_html_e( 'Vider les logs', 'ws-optimizer-ai' ); ?>
-            </button>
-            <?php endif; ?>
-        </div>
-
-        <?php if ( empty( $log ) ) : ?>
-        <p class="wsoa-debug-empty">
-            <?php esc_html_e( 'Aucune entrée. Cliquez sur "Analyser" dans un article pour générer des logs.', 'ws-optimizer-ai' ); ?>
-        </p>
-        <?php else : ?>
-        <div class="wsoa-debug-log">
-            <?php foreach ( $log as $entry ) :
-                $is_error = in_array( $entry['type'], [ 'exception', 'error' ], true );
-            ?>
-            <div class="wsoa-debug-entry <?php echo $is_error ? 'wsoa-debug-entry--error' : ''; ?>">
-                <div class="wsoa-debug-entry__meta">
-                    <span class="wsoa-debug-entry__time"><?php echo esc_html( $entry['time'] ); ?></span>
-                    <span class="wsoa-debug-entry__type"><?php echo esc_html( strtoupper( $entry['type'] ) ); ?></span>
-                </div>
-                <pre class="wsoa-debug-entry__data"><?php echo esc_html( is_array( $entry['data'] ) ? wp_json_encode( $entry['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) : $entry['data'] ); ?></pre>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
-    </div>
 </div>
-
-<script>
-(function() {
-    var btn = document.getElementById('wsoa-clear-log');
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-        btn.disabled = true;
-        var form = new FormData();
-        form.append('action', 'wsoa_clear_log');
-        form.append('nonce', <?php echo wp_json_encode( wp_create_nonce( 'wsoa_clear_log' ) ); ?>);
-        fetch(<?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, { method: 'POST', body: form })
-            .then(function(r) { return r.json(); })
-            .then(function(res) {
-                if (res.success) { window.location.reload(); }
-                else { btn.disabled = false; }
-            })
-            .catch(function() { btn.disabled = false; });
-    });
-}());
-</script>

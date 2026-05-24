@@ -308,3 +308,74 @@
     max-height: 300px;
     overflow-y: auto;
 }
+
+/* ── Tabs ──────────────────────────────────────────────────────────────────── */
+.wsoa-tabs {
+    display: flex;
+    gap: 4px;
+    margin: 16px 0 24px;
+    border-bottom: 1px solid #2E2B38;
+}
+.wsoa-tab {
+    padding: 8px 20px;
+    color: #9590A8;
+    text-decoration: none;
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color .15s;
+}
+.wsoa-tab:hover { color: #C4BFDA; }
+.wsoa-tab--active {
+    color: #F0EDE8;
+    border-bottom-color: #7C5CBF;
+}
+
+/* ── Logs toolbar ──────────────────────────────────────────────────────────── */
+.wsoa-logs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: #1A1724;
+    border: 1px solid #2E2B38;
+    border-radius: 8px;
+}
+.wsoa-logs-capture-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+.wsoa-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.wsoa-toggle input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    accent-color: #7C5CBF;
+    cursor: pointer;
+}
+.wsoa-toggle__label {
+    color: #C4BFDA;
+    font-size: 13px;
+    font-weight: 500;
+}
+.wsoa-btn-save-capture {
+    background: #2E2B38 !important;
+    border-color: #4A4260 !important;
+    color: #C4BFDA !important;
+}
+.wsoa-logs-notice {
+    padding: 10px 14px;
+    background: #221D32;
+    border: 1px solid #4A4260;
+    border-radius: 6px;
+    color: #9590A8;
+    font-size: 13px;
+    margin-bottom: 20px;
+}

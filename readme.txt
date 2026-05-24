@@ -4,7 +4,7 @@ Tags: seo, ai, title, claude, artificial-intelligence
 Requires at least: 6.7
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 2.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Yes. If a focus keyword is set in either plugin, it is passed to Claude as part 
 3. Settings page — post types and Claude model selection.
 
 == Changelog ==
+
+= 2.0.0 =
+* AI Logs tab: dedicated admin page with capture toggle.
+* Fixed wp_ai_client_prompt() usage (single argument, correct builder pattern).
+* WP_Error handling from generate_text().
 
 = 1.0.0 =
 * Initial release.

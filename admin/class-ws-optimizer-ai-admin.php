@@ -168,6 +168,7 @@ class WS_Optimizer_AI_Admin {
     // -------------------------------------------------------------------------
 
     public function add_settings_page() {
+        // Main settings page under Settings
         add_submenu_page(
             'options-general.php',
             __( 'WS SEO Title AI', 'ws-optimizer-ai' ),
@@ -176,10 +177,23 @@ class WS_Optimizer_AI_Admin {
             'ws-optimizer-ai',
             [ $this, 'render_settings_page' ]
         );
+        // AI Logs tab as a second submenu page (hidden from nav — accessed via tab)
+        add_submenu_page(
+            null,
+            __( 'WS SEO Title AI — AI Logs', 'ws-optimizer-ai' ),
+            __( 'AI Logs', 'ws-optimizer-ai' ),
+            'manage_options',
+            'ws-optimizer-ai-logs',
+            [ $this, 'render_logs_page' ]
+        );
     }
 
     public function render_settings_page() {
         require WS_OPTIMIZER_AI_PATH . 'admin/partials/ws-optimizer-ai-admin-settings.php';
+    }
+
+    public function render_logs_page() {
+        require WS_OPTIMIZER_AI_PATH . 'admin/partials/ws-optimizer-ai-admin-logs.php';
     }
 
     public function register_settings() {
@@ -187,6 +201,12 @@ class WS_Optimizer_AI_Admin {
             'wsoa_settings_group',
             'wsoa_settings',
             [ $this, 'sanitize_settings' ]
+        );
+
+        register_setting(
+            'wsoa_logs_settings_group',
+            'wsoa_capture_logs',
+            [ 'sanitize_callback' => 'rest_sanitize_boolean' ]
         );
 
         add_settings_section(

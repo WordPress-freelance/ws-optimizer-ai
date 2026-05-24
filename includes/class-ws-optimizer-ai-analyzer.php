@@ -246,13 +246,15 @@ class WS_Optimizer_AI_Analyzer {
      * Append a log entry to the wsoa_debug_log option (last 20 entries).
      */
     public static function log_entry( $type, $data ) {
+        if ( ! get_option( 'wsoa_capture_logs', false ) ) {
+            return;
+        }
         $log   = get_option( 'wsoa_debug_log', [] );
         $log[] = [
             'time' => current_time( 'mysql' ),
             'type' => $type,
             'data' => $data,
         ];
-        // Keep last 20 entries
         if ( count( $log ) > 20 ) {
             $log = array_slice( $log, -20 );
         }
