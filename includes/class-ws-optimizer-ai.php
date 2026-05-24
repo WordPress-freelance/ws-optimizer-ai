@@ -35,7 +35,9 @@ class WS_Optimizer_AI {
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
         $this->loader->add_action( 'add_meta_boxes',        $admin, 'register_metaboxes' );
         $this->loader->add_action( 'wp_ajax_wsoa_analyze',    $admin, 'ajax_analyze_title' );
-        $this->loader->add_action( 'wp_ajax_wsoa_clear_log', $admin, 'ajax_clear_log' );
+        $this->loader->add_action( 'wp_ajax_wsoa_clear_log',        $admin, 'ajax_clear_log' );
+        $this->loader->add_action( 'admin_post_wsoa_save_settings',     $admin, 'handle_save_settings' );
+        $this->loader->add_action( 'admin_post_wsoa_save_logs_settings', $admin, 'handle_save_logs_settings' );
         $this->loader->add_action( 'admin_menu',            $admin, 'add_settings_page' );
         $this->loader->add_action( 'admin_init',            $admin, 'register_settings' );
         $this->loader->add_filter( 'admin_body_class',      $admin, 'add_admin_body_class' );
