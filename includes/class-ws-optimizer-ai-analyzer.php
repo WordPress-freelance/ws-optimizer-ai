@@ -169,6 +169,13 @@ class WS_Optimizer_AI_Analyzer {
                 'value' => is_scalar( $result ) ? substr( (string) $result, 0, 300 ) : substr( wp_json_encode( $result ), 0, 300 ),
             ] );
 
+            // generate_text() returns WP_Error on failure
+            if ( is_wp_error( $result ) ) {
+                $msg = $result->get_error_message();
+                $this->log_entry( 'wp_error', $msg );
+                return [ 'error' => $msg ];
+            }
+
             return $this->parse_response( $result );
 
         } catch ( \Throwable $e ) {
