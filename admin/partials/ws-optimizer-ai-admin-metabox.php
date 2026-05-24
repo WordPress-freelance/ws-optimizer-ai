@@ -65,7 +65,7 @@ $last_title    = get_post_meta( $post->ID, '_wsoa_last_analyzed_title', true );
     <div id="wsoa-result-<?php echo esc_attr( $post->ID ); ?>" class="wsoa-result wsoa-result--empty"></div>
     <?php endif; ?>
 
-    <button type="button" class="wsoa-btn wsoa-analyze-btn" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+    <button type="button" class="wsoa-btn wsoa-btn-analyze" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
         <?php echo $last_analysis
             ? esc_html__( 'Ré-analyser', 'ws-optimizer-ai' )
             : esc_html__( 'Analyser le titre', 'ws-optimizer-ai' ); ?>
