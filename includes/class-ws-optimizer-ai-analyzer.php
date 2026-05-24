@@ -146,33 +146,16 @@ class WS_Optimizer_AI_Analyzer {
         try {
             // WordPress AI Client builder pattern — wp_ai_client_prompt($text)
             // returns WP_AI_Client_Prompt_Builder. Chain via __call then generate_text().
+            // wp_ai_client_prompt($prompt) returns WP_AI_Client_Prompt_Builder.
+            // usingModel() requires a ModelInterface object — cannot pass a string.
+            // Provider and model are configured by the user in WP Settings > AI Client.
             $builder = wp_ai_client_prompt( $prompt );
             $this->log_entry( 'builder_received', [
                 'type'  => gettype( $builder ),
                 'class' => is_object( $builder ) ? get_class( $builder ) : null,
             ] );
 
-            // Each method may return a different object — capture return values safely.
-            if ( is_object( $builder ) && method_exists( $builder, 'usingModel' ) ) {
-                $b2 = $builder->usingModel( $this->model );
-                $builder = $b2 ?: $builder;
-            }
-            if ( is_object( $builder ) && method_exists( $builder, 'usingMaxTokens' ) ) {
-                $b3 = $builder->usingMaxTokens( $this->max_tokens );
-                $builder = $b3 ?: $builder;
-            }
-
-            // Via __call magic, these snake_case aliases exist on the wrapper
-            if ( ! method_exists( $builder, 'usingModel' ) ) {
-                $b2 = $builder->using_model( $this->model );
-                $builder = $b2 ?: $builder;
-                $b3 = $builder->using_max_tokens( $this->max_tokens );
-                $builder = $b3 ?: $builder;
-            }
-
-            $this->log_response( $builder );
-
-            // Trigger the actual API call
+            // Trigger the actual API call — provider/model from WP AI Client settings
             $result = $builder->generate_text();
 
             $this->log_entry( 'generate_text_result', [

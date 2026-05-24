@@ -204,13 +204,6 @@ class WS_Optimizer_AI_Admin {
             'wsoa_general'
         );
 
-        add_settings_field(
-            'wsoa_model',
-            __( 'Modèle Claude', 'ws-optimizer-ai' ),
-            [ $this, 'render_model_field' ],
-            'ws-optimizer-ai',
-            'wsoa_general'
-        );
     }
 
     public function render_post_types_field() {
@@ -228,26 +221,6 @@ class WS_Optimizer_AI_Admin {
         }
     }
 
-    public function render_model_field() {
-        $settings = get_option( 'wsoa_settings', [] );
-        $model    = $settings['model'] ?? WS_Optimizer_AI_Analyzer::DEFAULT_MODEL;
-        $models   = [
-            'claude-opus-4-6'   => 'Claude Opus 4.6',
-            'claude-sonnet-4-6' => 'Claude Sonnet 4.6',
-        ];
-
-        echo '<select name="wsoa_settings[model]">';
-        foreach ( $models as $value => $label ) {
-            printf(
-                '<option value="%s" %s>%s</option>',
-                esc_attr( $value ),
-                selected( $model, $value, false ),
-                esc_html( $label )
-            );
-        }
-        echo '</select>';
-        echo '<p class="description">' . esc_html__( 'Modèle utilisé pour l\'analyse via WordPress AI Client.', 'ws-optimizer-ai' ) . '</p>';
-    }
 
     public function sanitize_settings( $input ) {
         $sanitized = [];
