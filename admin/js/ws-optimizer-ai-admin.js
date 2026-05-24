@@ -113,7 +113,13 @@
             form.append( 'post_id', postId );
 
             fetch( d.ajaxUrl || '/wp-admin/admin-ajax.php', { method: 'POST', body: form } )
-                .then( function ( r ) { return r.json(); } )
+                .then( function ( r ) {
+                    if ( ! r.ok ) {
+                        console.error( '[WS SEO Title AI] AJAX HTTP error: ' + r.status );
+                        throw new Error( 'HTTP ' + r.status );
+                    }
+                    return r.json();
+                } )
                 .then( function ( res ) {
                     if ( res.success ) {
                         if ( resultEl ) resultEl.innerHTML = buildResultHtml( res.data );
@@ -124,7 +130,8 @@
                         btn.textContent = t( 'analyze' );
                     }
                 } )
-                .catch( function () {
+                .catch( function ( err ) {
+                    console.error( '[WS SEO Title AI] AJAX error:', err );
                     if ( resultEl ) resultEl.innerHTML = '<p class="wsoa-error">' + escHtml( t( 'error' ) ) + '</p>';
                     btn.textContent = t( 'analyze' );
                 } )
