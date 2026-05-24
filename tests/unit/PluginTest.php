@@ -46,7 +46,6 @@ class PluginTest extends WebStrategyTestCase {
         $hooks   = array_column( $loader->get_actions(), 'hook' );
 
         $this->assertContains( 'admin_enqueue_scripts', $hooks );
-        $this->assertContains( 'wp_enqueue_scripts', $hooks );
     }
 
     public function test_loader_has_i18n_hook() {

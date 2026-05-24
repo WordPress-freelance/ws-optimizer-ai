@@ -14,7 +14,6 @@ class WS_Optimizer_AI {
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
-        $this->define_public_hooks();
     }
 
     private function load_dependencies() {
@@ -22,7 +21,6 @@ class WS_Optimizer_AI {
         require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai-i18n.php';
         require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai-analyzer.php';
         require_once WS_OPTIMIZER_AI_PATH . 'admin/class-ws-optimizer-ai-admin.php';
-        require_once WS_OPTIMIZER_AI_PATH . 'public/class-ws-optimizer-ai-public.php';
         $this->loader = new WS_Optimizer_AI_Loader();
     }
 
@@ -33,7 +31,6 @@ class WS_Optimizer_AI {
 
     private function define_admin_hooks() {
         $admin = new WS_Optimizer_AI_Admin( $this->plugin_name, $this->version );
-
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
         $this->loader->add_action( 'add_meta_boxes',        $admin, 'register_metaboxes' );
@@ -42,12 +39,6 @@ class WS_Optimizer_AI {
         $this->loader->add_action( 'admin_init',            $admin, 'register_settings' );
         $this->loader->add_filter( 'admin_body_class',      $admin, 'add_admin_body_class' );
         $this->loader->add_action( 'admin_head',            $admin, 'inline_reset_css' );
-    }
-
-    private function define_public_hooks() {
-        $public = new WS_Optimizer_AI_Public( $this->plugin_name, $this->version );
-        $this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_styles' );
-        $this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_scripts' );
     }
 
     public function run() {

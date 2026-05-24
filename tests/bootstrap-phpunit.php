@@ -112,4 +112,3 @@ require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai-deactivator.
 require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai-analyzer.php';
 require_once WS_OPTIMIZER_AI_PATH . 'includes/class-ws-optimizer-ai.php';
 require_once WS_OPTIMIZER_AI_PATH . 'admin/class-ws-optimizer-ai-admin.php';
-require_once WS_OPTIMIZER_AI_PATH . 'public/class-ws-optimizer-ai-public.php';
